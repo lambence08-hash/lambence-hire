@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Register — Lambence Hire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script src="nav-auth.js" defer></script>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+    </div>
+  </nav>
+
+  <div class="form-page">
+    <div class="form-box" style="max-width:560px">
+      <h2>Join as a Teacher</h2>
+      <p class="subtitle">Create your profile and get noticed by top schools</p>
+      <div class="error-msg" id="errMsg"></div>
+
+      <form id="regForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="name" placeholder="Your full name" required />
+          </div>
+          <div class="form-group">
+            <label>Role *</label>
+            <select id="role" required>
+              <option value="teacher">Teacher (School)</option>
+              <option value="professor">Professor (College)</option>
+              <option value="instructor">Instructor (Coaching)</option>
+              <option value="tutor">Tutor</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email *</label>
+            <input type="email" id="email" required />
+          </div>
+          <div class="form-group">
+            <label>Password *</label>
+            <input type="password" id="password" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="phone" placeholder="Mobile number" />
+          </div>
+          <div class="form-group">
+            <label>Experience (years)</label>
+            <input type="number" id="experience" min="0" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" id="city" required />
+          </div>
+          <div class="form-group">
+            <label>State *</label>
+            <input type="text" id="state" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Subjects (comma separated) *</label>
+          <input type="text" id="subjects" placeholder="e.g. Mathematics, Physics" required />
+        </div>
+
+        <div class="form-group">
+          <label>Qualification</label>
+          <input type="text" id="qualification" placeholder="e.g. B.Ed, M.Sc, PhD" />
+        </div>
+
+        <!-- RESUME UPLOAD -->
+        <div class="form-group">
+          <label>Resume / CV <span style="color:var(--text-muted);font-weight:400">(optional — PDF, DOC, max 5MB)</span></label>
+          <div id="resumeDropZone" style="border:2px dashed var(--border);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--grey)" onclick="document.getElementById('resumeFile').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleResumeDrop(event)">
+            <div id="resumeDropIcon" style="font-size:2rem;margin-bottom:6px">📄</div>
+            <div id="resumeDropText" style="font-size:0.88rem;color:var(--text-muted)">Click to upload or drag & drop your resume</div>
+            <div id="resumeFileName" style="margin-top:8px;font-size:0.85rem;font-weight:600;color:var(--blue);display:none"></div>
+          </div>
+          <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display:none" onchange="showResumeFile(this)" />
+        </div>
+
+        <button type="submit" class="btn-primary form-submit" id="submitBtn">Create Profile →</button>
+      </form>
+
+      <p class="form-link">Already registered? <a href="teacher-login.html">Login here</a></p>
+    </div>
+  </div>
+
+  <script>
+    function showResumeFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+      document.getElementById('resumeDropText').style.display = 'none';
+      document.getElementById('resumeDropIcon').textContent = '✅';
+      document.getElementById('resumeDropZone').style.borderColor = 'var(--blue)';
+      document.getElementById('resumeDropZone').style.background = 'var(--blue-light)';
+      const nameEl = document.getElementById('resumeFileName');
+      nameEl.textContent = file.name + ' (' + (file.size / 1024).toFixed(0) + ' KB)';
+      nameEl.style.display = 'block';
+    }
+
+    function handleResumeDrop(e) {
+      e.preventDefault();
+      const file = e.dataTransfer.files[0];
+      if (!file) return;
+      const dt = new DataTransfer();
+      dt.items.add(file);
+      document.getElementById('resumeFile').files = dt.files;
+      showResumeFile(document.getElementById('resumeFile'));
+    }
+
+    document.getElementById('regForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = document.getElementById('errMsg');
+      const btn = document.getElementById('submitBtn');
+      err.style.display = 'none';
+      btn.textContent = 'Creating profile...';
+      btn.disabled = true;
+
+      const subjectsRaw = document.getElementById('subjects').value;
+      const subjects = subjectsRaw.split(',').map(s => s.trim()).filter(Boolean);
+
+      const body = {
+        name:          document.getElementById('name').value,
+        role:          document.getElementById('role').value,
+        email:         document.getElementById('email').value,
+        password:      document.getElementById('password').value,
+        phone:         document.getElementById('phone').value,
+        experience:    Number(document.getElementById('experience').value) || 0,
+        city:          document.getElementById('city').value,
+        state:         document.getElementById('state').value,
+        subjects,
+        qualification: document.getElementById('qualification').value
+      };
+
+      try {
+        // Step 1: Register
+        const res = await fetch('/api/auth/teacher/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          err.textContent = data.error;
+          err.style.display = 'block';
+          btn.textContent = 'Create Profile →';
+          btn.disabled = false;
+          return;
+        }
+
+        const token = data.token;
+        localStorage.setItem('teacherToken', token);
+        localStorage.setItem('teacherData', JSON.stringify(data.teacher));
+
+        // Step 2: Upload resume if selected
+        const resumeFile = document.getElementById('resumeFile').files[0];
+        if (resumeFile) {
+          btn.textContent = 'Uploading resume...';
+          const form = new FormData();
+          form.append('resume', resumeFile);
+          await fetch('/api/upload/resume', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: form
+          });
+        }
+
+        window.location.href = 'teacher-dashboard.html';
+      } catch {
+        err.textContent = 'Server error. Please try again.';
+        err.style.display = 'block';
+        btn.textContent = 'Create Profile →';
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

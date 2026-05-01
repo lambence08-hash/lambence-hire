@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Salary Insights India 2025 — Lambence Hire</title>
+  <meta name="description" content="Find average teacher and professor salaries by subject and city in India. Real data from job postings." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .insights-hero { background: linear-gradient(135deg, #1a56db, #1e40af); color: white; padding: 64px 24px; text-align: center; }
+    .insights-hero h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; }
+    .insights-hero p { font-size: 1.1rem; opacity: 0.9; max-width: 600px; margin: 0 auto 32px; }
+    .salary-search { background: white; border-radius: 14px; padding: 24px; max-width: 600px; margin: 0 auto; display: flex; gap: 12px; flex-wrap: wrap; }
+    .salary-search input, .salary-search select { flex: 1; min-width: 160px; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.95rem; }
+    .insights-body { max-width: 1100px; margin: 0 auto; padding: 48px 24px; }
+    .salary-result { background: white; border-radius: 14px; padding: 32px; box-shadow: var(--shadow); margin-bottom: 32px; display: none; }
+    .salary-numbers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; }
+    .salary-num { text-align: center; padding: 20px; background: var(--blue-light); border-radius: 12px; }
+    .salary-num .num { font-size: 1.8rem; font-weight: 800; color: var(--blue); }
+    .salary-num .label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+    .trending-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+    .trending-card { background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow); border-left: 4px solid var(--blue); }
+    .trending-card h4 { font-weight: 700; margin-bottom: 6px; }
+    .trending-card .jobs-count { font-size: 0.85rem; color: var(--text-muted); }
+    .trending-card .avg-sal { font-size: 0.9rem; color: #16a34a; font-weight: 600; margin-top: 4px; }
+    .cities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-top: 24px; }
+    .city-card { background: white; border-radius: 10px; padding: 16px; box-shadow: var(--shadow); text-align: center; cursor: pointer; transition: transform 0.2s; }
+    .city-card:hover { transform: translateY(-3px); }
+    .city-card h4 { font-weight: 700; margin-bottom: 4px; }
+    .city-card .city-jobs { font-size: 0.85rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <script src="nav-auth.js" defer></script>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+      <div class="nav-links">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="teacher-register.html" class="btn-primary">Join as Teacher</a>
+      </div>
+      <button class="hamburger" id="navHamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-nav-head">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+      <span class="mobile-nav-close" id="mobileNavClose">✕</span>
+    </div>
+    <a href="jobs.html">🔍 Browse Jobs</a>
+    <a href="salary-insights.html" style="color:var(--blue);font-weight:700">📊 Salary Insights</a>
+    <a href="school-login.html" class="btn-outline">School Login</a>
+    <a href="teacher-login.html" class="btn-primary">Teacher Login</a>
+  </div>
+
+  <div class="insights-hero">
+    <h1>Teacher Salary Insights India</h1>
+    <p>Real salary data from thousands of job postings. Find what teachers earn by subject and city.</p>
+    <div class="salary-search">
+      <input id="siSubject" placeholder="Subject (e.g. Mathematics)" />
+      <input id="siCity" placeholder="City (e.g. Delhi)" />
+      <button class="btn-primary" onclick="getSalaryInsight()">Check Salary</button>
+    </div>
+  </div>
+
+  <div class="insights-body">
+
+    <!-- Salary Result -->
+    <div class="salary-result" id="salaryResult">
+      <h3 id="salaryTitle">Salary Insights</h3>
+      <p style="color:var(--text-muted)" id="salarySubtitle"></p>
+      <div class="salary-numbers">
+        <div class="salary-num"><div class="num" id="salAvg">—</div><div class="label">Average Salary</div></div>
+        <div class="salary-num"><div class="num" id="salMin">—</div><div class="label">Minimum</div></div>
+        <div class="salary-num"><div class="num" id="salMax">—</div><div class="label">Maximum</div></div>
+      </div>
+      <p style="margin-top:16px;font-size:0.85rem;color:var(--text-muted)" id="salCount"></p>
+    </div>
+
+    <!-- Trending Subjects -->
+    <div>
+      <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:8px">Most In-Demand Subjects</h2>
+      <p style="color:var(--text-muted);margin-bottom:4px">Subjects with most active job openings right now</p>
+      <div class="trending-grid" id="trendingGrid">
+        <div style="color:var(--text-muted)">Loading...</div>
+      </div>
+    </div>
+
+    <!-- Top Cities -->
+    <div style="margin-top:48px">
+      <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:8px">Top Hiring Cities</h2>
+      <p style="color:var(--text-muted);margin-bottom:4px">Cities with most teacher job openings</p>
+      <div class="cities-grid" id="citiesGrid">
+        <div style="color:var(--text-muted)">Loading...</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="background:var(--blue);border-radius:16px;padding:40px;text-align:center;margin-top:48px;color:white">
+      <h2 style="font-size:1.6rem;font-weight:700;margin-bottom:12px">Ready to Find Your Next Teaching Job?</h2>
+      <p style="opacity:0.9;margin-bottom:24px">Join 2,000+ teachers on Lambence Hire. Get verified and get hired faster.</p>
+      <a href="teacher-register.html" class="btn-white" style="margin-right:12px">Join Free as Teacher</a>
+      <a href="jobs.html" class="btn-white">Browse Jobs</a>
+    </div>
+  </div>
+
+  <script>
+    async function getSalaryInsight() {
+      const subject = document.getElementById('siSubject').value;
+      const city = document.getElementById('siCity').value;
+      if (!subject && !city) return alert('Enter subject or city');
+
+      const params = new URLSearchParams();
+      if (subject) params.set('subject', subject);
+      if (city) params.set('city', city);
+
+      const res = await fetch('/api/insights/salary?' + params);
+      const d = await res.json();
+      const result = document.getElementById('salaryResult');
+      result.style.display = 'block';
+      result.scrollIntoView({ behavior: 'smooth' });
+
+      document.getElementById('salaryTitle').textContent = `${subject || 'All Subjects'} Salary in ${city || 'India'}`;
+      document.getElementById('salarySubtitle').textContent = 'Based on active job postings on Lambence Hire';
+      document.getElementById('salAvg').textContent = d.avg ? '₹' + d.avg.toLocaleString() : '—';
+      document.getElementById('salMin').textContent = d.min ? '₹' + d.min.toLocaleString() : '—';
+      document.getElementById('salMax').textContent = d.max ? '₹' + d.max.toLocaleString() : '—';
+      document.getElementById('salCount').textContent = `Based on ${d.count} job postings`;
+    }
+
+    async function loadTrending() {
+      const res = await fetch('/api/insights/trending');
+      const data = await res.json();
+      document.getElementById('trendingGrid').innerHTML = data.length
+        ? data.map(d => `
+          <div class="trending-card" onclick="document.getElementById('siSubject').value='${d._id}';getSalaryInsight()">
+            <h4>${d._id}</h4>
+            <div class="jobs-count">${d.count} open jobs</div>
+            ${d.avgSalary ? `<div class="avg-sal">Avg ₹${Math.round(d.avgSalary).toLocaleString()}/mo</div>` : ''}
+          </div>`).join('')
+        : '<p style="color:var(--text-muted)">No data yet — jobs being added</p>';
+    }
+
+    async function loadCities() {
+      const res = await fetch('/api/insights/cities');
+      const data = await res.json();
+      document.getElementById('citiesGrid').innerHTML = data.length
+        ? data.map(d => `
+          <div class="city-card" onclick="document.getElementById('siCity').value='${d._id}';getSalaryInsight()">
+            <h4>${d._id}</h4>
+            <div class="city-jobs">${d.jobs} jobs open</div>
+          </div>`).join('')
+        : '<p style="color:var(--text-muted)">No data yet</p>';
+    }
+
+    loadTrending();
+    loadCities();
+
+    const hamburger = document.getElementById('navHamburger');
+    const drawer    = document.getElementById('mobileNavDrawer');
+    const overlay   = document.getElementById('mobileNavOverlay');
+    const closeBtn  = document.getElementById('mobileNavClose');
+    function openNav()  { drawer.classList.add('open'); overlay.classList.add('open'); hamburger.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeNav() { drawer.classList.remove('open'); overlay.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow=''; }
+    hamburger.addEventListener('click', openNav);
+    overlay.addEventListener('click', closeNav);
+    closeBtn.addEventListener('click', closeNav);
+  </script>
+</body>
+</html>

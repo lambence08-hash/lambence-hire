@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Lambence Hire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="loginScreen" style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--grey)">
+    <div class="form-box">
+      <h2>Admin Login</h2>
+      <div class="error-msg" id="adminErr"></div>
+      <form id="adminLoginForm">
+        <div class="form-group"><label>Email</label><input type="email" id="adminEmail" required /></div>
+        <div class="form-group"><label>Password</label><input type="password" id="adminPass" required /></div>
+        <button type="submit" class="btn-primary form-submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="adminPanel" style="display:none">
+    <div class="dashboard">
+      <div class="sidebar">
+        <div class="sidebar-logo">Lambence<span> Admin</span></div>
+        <nav class="sidebar-nav">
+          <a href="#" class="active" data-tab="stats">📊 Dashboard</a>
+          <a href="#" data-tab="schools">🏫 Schools</a>
+          <a href="#" data-tab="teachers">👨‍🏫 Teachers</a>
+          <a href="#" data-tab="questions">❓ Add Questions</a>
+          <a href="#" data-tab="export">📤 Export Data</a>
+          <a href="#" id="adminLogout">🚪 Logout</a>
+        </nav>
+      </div>
+
+      <div class="main-content">
+        <div class="page-title">Admin Panel</div>
+
+        <!-- STATS -->
+        <div id="tab-stats" class="tab-content">
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-num" id="sSchools">—</div><div class="stat-label">Total Schools</div></div>
+            <div class="stat-card"><div class="stat-num" id="sTeachers">—</div><div class="stat-label">Total Teachers</div></div>
+            <div class="stat-card"><div class="stat-num" id="sJobs">—</div><div class="stat-label">Active Jobs</div></div>
+            <div class="stat-card"><div class="stat-num" id="sApps">—</div><div class="stat-label">Applications</div></div>
+            <div class="stat-card"><div class="stat-num" id="sVerified">—</div><div class="stat-label">Verified Teachers</div></div>
+          </div>
+        </div>
+
+        <!-- SCHOOLS -->
+        <div id="tab-schools" class="tab-content" style="display:none">
+          <h2 class="page-title">Schools & Colleges</h2>
+          <div class="table-wrap">
+            <table><thead><tr><th>Name</th><th>Type</th><th>City</th><th>Plan</th><th>Verified</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="schoolsTable"></tbody></table>
+          </div>
+        </div>
+
+        <!-- TEACHERS -->
+        <div id="tab-teachers" class="tab-content" style="display:none">
+          <h2 class="page-title">Teachers & Professors</h2>
+          <div class="table-wrap">
+            <table><thead><tr><th>Name</th><th>Role</th><th>Subjects</th><th>City</th><th>Badge</th><th>Score</th><th>Joined</th></tr></thead>
+            <tbody id="teachersTable"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ADD QUESTIONS -->
+        <div id="tab-questions" class="tab-content" style="display:none">
+          <h2 class="page-title">Add Assessment Questions</h2>
+          <div style="background:white;border-radius:14px;padding:32px;max-width:700px;box-shadow:var(--shadow)">
+            <div class="success-msg" id="qOk"></div>
+            <div class="error-msg" id="qErr"></div>
+            <form id="questionForm">
+              <div class="form-row">
+                <div class="form-group"><label>Subject *</label>
+                  <select id="qSubject" required>
+                    <option value="">Select</option>
+                    <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
+                    <option>Biology</option><option>English</option><option>History</option>
+                    <option>Geography</option><option>Computer Science</option><option>Economics</option><option>Hindi</option>
+                  </select>
+                </div>
+                <div class="form-group"><label>Level</label>
+                  <select id="qLevel"><option value="basic">Basic</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select>
+                </div>
+              </div>
+              <div class="form-group"><label>Question *</label><textarea id="qQuestion" rows="2" required></textarea></div>
+              <div class="form-group"><label>Option A *</label><input id="qA" required /></div>
+              <div class="form-group"><label>Option B *</label><input id="qB" required /></div>
+              <div class="form-group"><label>Option C *</label><input id="qC" required /></div>
+              <div class="form-group"><label>Option D *</label><input id="qD" required /></div>
+              <div class="form-group"><label>Correct Answer *</label>
+                <select id="qCorrect" required>
+                  <option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-primary">Add Question</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- EXPORT -->
+        <div id="tab-export" class="tab-content" style="display:none">
+          <h2 class="page-title">Export Data</h2>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px">
+            <div style="background:white;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
+              <h3 style="margin-bottom:12px">Export Schools</h3>
+              <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px">Download school database — sell to EdTech, publishers</p>
+              <div class="form-group"><label>City (optional)</label><input id="expSchoolCity" placeholder="e.g. Delhi" /></div>
+              <div class="form-group"><label>State (optional)</label><input id="expSchoolState" /></div>
+              <div class="form-group"><label>Type</label>
+                <select id="expSchoolType"><option value="">All</option><option value="school">School</option><option value="college">College</option><option value="coaching">Coaching</option></select>
+              </div>
+              <button class="btn-primary" onclick="exportData('schools')">Download JSON</button>
+            </div>
+            <div style="background:white;border-radius:14px;padding:28px;box-shadow:var(--shadow)">
+              <h3 style="margin-bottom:12px">Export Teachers</h3>
+              <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px">Download teacher database — sell to staffing agencies</p>
+              <div class="form-group"><label>City (optional)</label><input id="expTeacherCity" placeholder="e.g. Mumbai" /></div>
+              <div class="form-group"><label>Subject (optional)</label><input id="expTeacherSubject" placeholder="e.g. Mathematics" /></div>
+              <button class="btn-primary" onclick="exportData('teachers')">Download JSON</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let adminToken = localStorage.getItem('adminToken');
+    if (adminToken) showPanel();
+
+    document.getElementById('adminLoginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = document.getElementById('adminErr');
+      err.style.display = 'none';
+      const res = await fetch('/api/auth/admin/login', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: document.getElementById('adminEmail').value, password: document.getElementById('adminPass').value })
+      });
+      const data = await res.json();
+      if (!res.ok) { err.textContent = data.error; err.style.display = 'block'; return; }
+      adminToken = data.token;
+      localStorage.setItem('adminToken', adminToken);
+      showPanel();
+    });
+
+    function showPanel() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      loadStats();
+    }
+
+    function api(url, opts = {}) {
+      return fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json' } });
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + name).style.display = 'block';
+      document.querySelector(`[data-tab="${name}"]`)?.classList.add('active');
+      if (name === 'stats') loadStats();
+      if (name === 'schools') loadSchools();
+      if (name === 'teachers') loadTeachers();
+    }
+
+    document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); switchTab(a.dataset.tab); });
+    });
+
+    document.getElementById('adminLogout').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('adminToken');
+      window.location.reload();
+    });
+
+    async function loadStats() {
+      const res = await api('/api/admin/stats');
+      const d = await res.json();
+      document.getElementById('sSchools').textContent = d.schools;
+      document.getElementById('sTeachers').textContent = d.teachers;
+      document.getElementById('sJobs').textContent = d.jobs;
+      document.getElementById('sApps').textContent = d.applications;
+      document.getElementById('sVerified').textContent = d.verifiedTeachers;
+    }
+
+    async function loadSchools() {
+      const res = await api('/api/admin/schools');
+      const schools = await res.json();
+      document.getElementById('schoolsTable').innerHTML = schools.map(s => `
+        <tr>
+          <td><strong>${s.name}</strong><div style="font-size:0.8rem;color:var(--text-muted)">${s.email}</div></td>
+          <td>${s.type}</td>
+          <td>${s.city}, ${s.state}</td>
+          <td><span class="badge badge-${s.plan === 'free' ? 'none' : 'verified'}">${s.plan}</span></td>
+          <td>${s.isVerified ? '✓' : '—'}</td>
+          <td>${new Date(s.createdAt).toLocaleDateString('en-IN')}</td>
+          <td>
+            <button onclick="upgradePlan('${s._id}')" style="padding:4px 10px;font-size:0.8rem;background:var(--blue-light);color:var(--blue);border:none;border-radius:6px;cursor:pointer;margin-right:4px">Upgrade</button>
+            ${!s.isVerified ? `<button onclick="verifySchool('${s._id}')" style="padding:4px 10px;font-size:0.8rem;background:#dcfce7;color:#166534;border:none;border-radius:6px;cursor:pointer">Verify</button>` : ''}
+          </td>
+        </tr>`).join('');
+    }
+
+    async function upgradePlan(id) {
+      const plan = prompt('Enter plan (basic/pro/enterprise):');
+      if (!plan) return;
+      await api('/api/admin/schools/' + id + '/plan', { method: 'PUT', body: JSON.stringify({ plan }) });
+      loadSchools();
+    }
+
+    async function verifySchool(id) {
+      await api('/api/admin/schools/' + id + '/verify', { method: 'PUT' });
+      loadSchools();
+    }
+
+    async function loadTeachers() {
+      const res = await api('/api/admin/teachers');
+      const teachers = await res.json();
+      document.getElementById('teachersTable').innerHTML = teachers.map(t => `
+        <tr>
+          <td><strong>${t.name}</strong><div style="font-size:0.8rem;color:var(--text-muted)">${t.email}</div></td>
+          <td>${t.role}</td>
+          <td>${(t.subjects || []).slice(0, 2).join(', ')}</td>
+          <td>${t.city}</td>
+          <td><span class="badge badge-${t.assessmentBadge}">${t.assessmentBadge}</span></td>
+          <td>${t.assessmentScore ? t.assessmentScore + '%' : '—'}</td>
+          <td>${new Date(t.createdAt).toLocaleDateString('en-IN')}</td>
+        </tr>`).join('');
+    }
+
+    document.getElementById('questionForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const ok = document.getElementById('qOk');
+      const err = document.getElementById('qErr');
+      ok.style.display = 'none'; err.style.display = 'none';
+      const body = [{
+        subject: document.getElementById('qSubject').value,
+        level: document.getElementById('qLevel').value,
+        question: document.getElementById('qQuestion').value,
+        options: [
+          document.getElementById('qA').value,
+          document.getElementById('qB').value,
+          document.getElementById('qC').value,
+          document.getElementById('qD').value
+        ],
+        correct: Number(document.getElementById('qCorrect').value)
+      }];
+      const res = await api('/api/assessment/questions', { method: 'POST', body: JSON.stringify(body) });
+      const data = await res.json();
+      if (!res.ok) { err.textContent = data.error; err.style.display = 'block'; return; }
+      ok.textContent = 'Question added!';
+      ok.style.display = 'block';
+      document.getElementById('questionForm').reset();
+    });
+
+    async function exportData(type) {
+      const params = new URLSearchParams();
+      if (type === 'schools') {
+        const city = document.getElementById('expSchoolCity').value;
+        const state = document.getElementById('expSchoolState').value;
+        const t = document.getElementById('expSchoolType').value;
+        if (city) params.set('city', city);
+        if (state) params.set('state', state);
+        if (t) params.set('type', t);
+      } else {
+        const city = document.getElementById('expTeacherCity').value;
+        const subject = document.getElementById('expTeacherSubject').value;
+        if (city) params.set('city', city);
+        if (subject) params.set('subject', subject);
+      }
+      const res = await api('/api/admin/export/' + type + '?' + params);
+      const data = await res.json();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `lambence-${type}-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    }
+  </script>
+</body>
+</html>

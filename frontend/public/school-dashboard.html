@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Dashboard — Lambence Hire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- MOBILE TOP BAR -->
+  <div class="mobile-topbar">
+    <a href="/" class="m-logo" style="text-decoration:none">Lambence<span>Hire</span></a>
+    <button class="hamburger white" id="dashHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="dashboard">
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="dashSidebar">
+      <a href="/" class="sidebar-logo" style="display:block;text-decoration:none">Lambence<span>Hire</span></a>
+      <nav class="sidebar-nav">
+        <a href="#" class="active" data-tab="overview">📊 Overview</a>
+        <a href="#" data-tab="post-job">➕ Post a Job</a>
+        <a href="#" data-tab="my-jobs">📋 My Jobs</a>
+        <a href="#" data-tab="browse-teachers">👨‍🏫 Browse Teachers</a>
+        <a href="#" data-tab="applications">📩 Applications</a>
+        <a href="#" data-tab="analytics">📈 Analytics</a>
+        <a href="#" id="logoutBtn" style="margin-top:auto">🚪 Logout</a>
+      </nav>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+      <div id="schoolName" class="page-title">Welcome back!</div>
+
+      <!-- OVERVIEW TAB -->
+      <div id="tab-overview" class="tab-content">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="totalJobs">0</div><div class="stat-label">Active Jobs</div></div>
+          <div class="stat-card"><div class="stat-num" id="totalApps">0</div><div class="stat-label">Total Applications</div></div>
+          <div class="stat-card"><div class="stat-num" id="shortlisted">0</div><div class="stat-label">Shortlisted</div></div>
+          <div class="stat-card"><div class="stat-num" id="hired">0</div><div class="stat-label">Hired</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Recent Jobs</h3><a href="#" class="btn-primary" onclick="switchTab('post-job')">+ Post New Job</a></div>
+          <table><thead><tr><th>Title</th><th>Subject</th><th>Type</th><th>Applicants</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="overviewJobsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- POST JOB TAB -->
+      <div id="tab-post-job" class="tab-content" style="display:none">
+        <h2 class="page-title">Post a New Job</h2>
+        <div style="background:white;border-radius:14px;padding:32px;box-shadow:var(--shadow);max-width:700px">
+          <div class="error-msg" id="jobErrMsg"></div>
+          <div class="success-msg" id="jobOkMsg"></div>
+          <form id="postJobForm">
+            <div class="form-row">
+              <div class="form-group"><label>Job Title *</label><input id="jTitle" placeholder="e.g. Math Teacher Class 9-10" required /></div>
+              <div class="form-group"><label>Subject *</label><input id="jSubject" placeholder="e.g. Mathematics" required /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Job Type</label>
+                <select id="jType"><option value="full-time">Full Time</option><option value="part-time">Part Time</option><option value="contract">Contract</option><option value="visiting">Visiting</option></select>
+              </div>
+              <div class="form-group"><label>Level</label>
+                <select id="jLevel"><option value="all">All Levels</option><option value="primary">Primary</option><option value="secondary">Secondary</option><option value="senior-secondary">Senior Secondary</option><option value="undergraduate">Undergraduate</option><option value="postgraduate">Postgraduate</option></select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Min Salary (₹/month)</label><input type="number" id="jSalMin" placeholder="15000" /></div>
+              <div class="form-group"><label>Max Salary (₹/month)</label><input type="number" id="jSalMax" placeholder="35000" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Min Experience (years)</label><input type="number" id="jExp" placeholder="0" min="0" /></div>
+              <div class="form-group"><label>Application Deadline</label><input type="date" id="jDeadline" /></div>
+            </div>
+            <div class="form-group"><label>Job Description</label><textarea id="jDesc" rows="3" placeholder="Describe the role, responsibilities..."></textarea></div>
+            <div class="form-group"><label>Requirements</label><textarea id="jReq" rows="3" placeholder="Qualifications, skills needed..."></textarea></div>
+            <button type="submit" class="btn-primary">Post Job</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- MY JOBS TAB -->
+      <div id="tab-my-jobs" class="tab-content" style="display:none">
+        <h2 class="page-title">My Job Postings</h2>
+        <div class="table-wrap">
+          <table><thead><tr><th>Title</th><th>Subject</th><th>Type</th><th>Salary</th><th>Applicants</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody id="myJobsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- BROWSE TEACHERS TAB -->
+      <div id="tab-browse-teachers" class="tab-content" style="display:none">
+        <h2 class="page-title">Browse Teachers</h2>
+        <div class="jobs-filters">
+          <div class="filter-group"><label>Subject</label><input id="fSubject" placeholder="e.g. Math" /></div>
+          <div class="filter-group"><label>City</label><input id="fCity" placeholder="e.g. Delhi" /></div>
+          <div class="filter-group"><label>Min Exp (yrs)</label><input type="number" id="fExp" min="0" /></div>
+          <div class="filter-group"><label>Badge</label>
+            <select id="fBadge"><option value="">All</option><option value="verified">Verified</option><option value="expert">Expert</option></select>
+          </div>
+          <button class="btn-primary" onclick="browseTeachers()">Search</button>
+        </div>
+        <div id="teachersGrid" class="jobs-grid"></div>
+      </div>
+
+      <!-- ANALYTICS TAB -->
+      <div id="tab-analytics" class="tab-content" style="display:none">
+        <h2 class="page-title">Job Analytics</h2>
+        <div class="stats-grid" id="analyticsStats"></div>
+        <div class="table-wrap" style="margin-top:24px">
+          <div class="table-header"><h3>Job Performance</h3></div>
+          <table><thead><tr><th>Job Title</th><th>Subject</th><th>Views</th><th>Applications</th><th>Conversion</th><th>Status</th></tr></thead>
+          <tbody id="analyticsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- APPLICATIONS TAB -->
+      <div id="tab-applications" class="tab-content" style="display:none">
+        <h2 class="page-title">All Applications</h2>
+        <div id="applicationsWrap"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICANTS MODAL -->
+  <div class="modal-overlay" id="applicantsModal">
+    <div class="modal" style="max-width:700px">
+      <span class="modal-close" onclick="closeModal()">✕</span>
+      <h3 id="modalJobTitle">Applicants</h3>
+      <div id="applicantsList"></div>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('schoolToken');
+    if (!token) window.location.href = 'school-login.html';
+    const school = JSON.parse(localStorage.getItem('schoolData') || '{}');
+    document.getElementById('schoolName').textContent = 'Welcome, ' + (school.name || 'School');
+
+    function api(url, opts = {}) {
+      return fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+    }
+
+    // TAB SWITCHING
+    document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); switchTab(a.dataset.tab); });
+    });
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.mobile-bottom-nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + name).style.display = 'block';
+      document.querySelectorAll(`[data-tab="${name}"]`).forEach(el => el.classList.add('active'));
+      if (name === 'overview') loadOverview();
+      if (name === 'my-jobs') loadMyJobs();
+      if (name === 'applications') loadAllApplications();
+      if (name === 'analytics') loadAnalytics();
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('schoolToken');
+      localStorage.removeItem('schoolData');
+      window.location.href = '/';
+    });
+
+    // OVERVIEW
+    async function loadOverview() {
+      const res = await api('/api/jobs/school/mine');
+      const jobs = await res.json();
+      document.getElementById('totalJobs').textContent = jobs.filter(j => j.isActive).length;
+      let totalApps = 0, short = 0, hired = 0;
+      jobs.forEach(j => { totalApps += j.applicants || 0; });
+      document.getElementById('totalApps').textContent = totalApps;
+      document.getElementById('shortlisted').textContent = '—';
+      document.getElementById('hired').textContent = '—';
+
+      const tbody = document.getElementById('overviewJobsTable');
+      tbody.innerHTML = jobs.slice(0, 6).map(j => `
+        <tr>
+          <td><strong>${j.title}</strong></td>
+          <td>${j.subject}</td>
+          <td>${j.type}</td>
+          <td>${j.applicants || 0}</td>
+          <td><span class="badge ${j.isActive ? 'badge-verified' : 'badge-none'}">${j.isActive ? 'Active' : 'Closed'}</span></td>
+          <td><button class="btn-outline" style="padding:4px 12px;font-size:0.8rem" onclick="viewApplicants('${j._id}','${j.title}')">View Applicants</button></td>
+        </tr>`).join('');
+    }
+
+    // POST JOB
+    document.getElementById('postJobForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = document.getElementById('jobErrMsg');
+      const ok = document.getElementById('jobOkMsg');
+      err.style.display = 'none'; ok.style.display = 'none';
+
+      const body = {
+        title: document.getElementById('jTitle').value,
+        subject: document.getElementById('jSubject').value,
+        type: document.getElementById('jType').value,
+        level: document.getElementById('jLevel').value,
+        salaryMin: Number(document.getElementById('jSalMin').value) || 0,
+        salaryMax: Number(document.getElementById('jSalMax').value) || 0,
+        experience: Number(document.getElementById('jExp').value) || 0,
+        deadline: document.getElementById('jDeadline').value,
+        description: document.getElementById('jDesc').value,
+        requirements: document.getElementById('jReq').value
+      };
+
+      const res = await api('/api/jobs', { method: 'POST', body: JSON.stringify(body) });
+      const data = await res.json();
+      if (!res.ok) { err.textContent = data.error; err.style.display = 'block'; return; }
+      ok.textContent = 'Job posted successfully!';
+      ok.style.display = 'block';
+      document.getElementById('postJobForm').reset();
+    });
+
+    // MY JOBS
+    async function loadMyJobs() {
+      const res = await api('/api/jobs/school/mine');
+      const jobs = await res.json();
+      document.getElementById('myJobsTable').innerHTML = jobs.map(j => `
+        <tr>
+          <td><strong>${j.title}</strong></td>
+          <td>${j.subject}</td>
+          <td>${j.type}</td>
+          <td>${j.salaryMin ? '₹' + j.salaryMin.toLocaleString() + ' - ₹' + j.salaryMax.toLocaleString() : '—'}</td>
+          <td>${j.applicants || 0}</td>
+          <td><span class="badge ${j.isActive ? 'badge-verified' : 'badge-none'}">${j.isActive ? 'Active' : 'Closed'}</span></td>
+          <td>
+            <button class="btn-outline" style="padding:4px 12px;font-size:0.8rem;margin-right:6px" onclick="viewApplicants('${j._id}','${j.title}')">Applicants</button>
+            ${j.isActive ? `<button style="padding:4px 12px;font-size:0.8rem;background:#fee2e2;color:#991b1b;border:none;border-radius:6px;cursor:pointer" onclick="closeJob('${j._id}')">Close</button>` : ''}
+          </td>
+        </tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:#6b7280;padding:32px">No jobs posted yet</td></tr>';
+    }
+
+    async function closeJob(id) {
+      if (!confirm('Close this job posting?')) return;
+      await api('/api/jobs/' + id, { method: 'DELETE' });
+      loadMyJobs();
+    }
+
+    // BROWSE TEACHERS
+    async function browseTeachers() {
+      const params = new URLSearchParams();
+      const s = document.getElementById('fSubject').value;
+      const c = document.getElementById('fCity').value;
+      const exp = document.getElementById('fExp').value;
+      const badge = document.getElementById('fBadge').value;
+      if (s) params.set('subject', s);
+      if (c) params.set('city', c);
+      if (exp) params.set('experience', exp);
+      if (badge) params.set('badge', badge);
+
+      const res = await api('/api/teachers?' + params);
+      const data = await res.json();
+      document.getElementById('teachersGrid').innerHTML = (data.teachers || []).map(t => `
+        <div class="job-card">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+            <div style="width:48px;height:48px;background:var(--blue);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem">${t.name.substring(0,2).toUpperCase()}</div>
+            <div>
+              <div style="font-weight:700">${t.name}</div>
+              <div style="font-size:0.85rem;color:var(--text-muted)">${t.role} • ${t.city}</div>
+            </div>
+          </div>
+          <div class="job-meta">
+            ${t.subjects.map(s => `<span class="job-tag">${s}</span>`).join('')}
+          </div>
+          <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px">${t.experience} yrs exp • ${t.qualification || 'N/A'}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:12px">
+            <span class="badge badge-${t.assessmentBadge}">${t.assessmentBadge === 'none' ? 'Not Assessed' : t.assessmentBadge.charAt(0).toUpperCase() + t.assessmentBadge.slice(1) + ' — ' + t.assessmentScore + '%'}</span>
+            <span style="font-size:0.85rem;color:#16a34a;font-weight:600">${t.expectedSalary ? '₹' + t.expectedSalary.toLocaleString() + '/mo' : ''}</span>
+          </div>
+          <div style="margin-top:12px;font-size:0.85rem">📞 ${t.phone || 'N/A'} &nbsp; 📧 ${t.email}</div>
+        </div>`).join('') || '<p style="color:var(--text-muted)">No teachers found</p>';
+    }
+
+    // VIEW APPLICANTS
+    async function viewApplicants(jobId, title) {
+      document.getElementById('modalJobTitle').textContent = 'Applicants — ' + title;
+      document.getElementById('applicantsList').innerHTML = '<p>Loading...</p>';
+      document.getElementById('applicantsModal').classList.add('open');
+
+      const res = await api('/api/jobs/' + jobId + '/applicants');
+      const apps = await res.json();
+      document.getElementById('applicantsList').innerHTML = apps.length === 0
+        ? '<p style="color:var(--text-muted);text-align:center;padding:24px">No applicants yet</p>'
+        : apps.map(a => `
+          <div style="border:1px solid var(--border);border-radius:10px;padding:18px;margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:10px">
+              <div>
+                <strong>${a.teacher?.name}</strong>
+                <div style="font-size:0.85rem;color:var(--text-muted)">${a.teacher?.role} • ${a.teacher?.city} • ${a.teacher?.experience} yrs</div>
+                <div style="font-size:0.85rem;margin-top:4px">📧 ${a.teacher?.email} &nbsp; 📞 ${a.teacher?.phone || 'N/A'}</div>
+                ${a.teacher?.resume ? `<a href="${a.teacher.resume}" target="_blank" style="font-size:0.82rem;color:var(--blue);font-weight:600;margin-top:4px;display:inline-block">📄 Download Resume</a>` : '<span style="font-size:0.8rem;color:var(--text-muted)">No resume</span>'}
+              </div>
+              <span class="badge badge-${a.teacher?.assessmentBadge}">${a.teacher?.assessmentBadge === 'none' ? 'Not Assessed' : a.teacher?.assessmentBadge + ' ' + a.teacher?.assessmentScore + '%'}</span>
+            </div>
+            ${a.coverLetter ? `<div style="font-size:0.85rem;background:var(--grey);padding:10px;border-radius:6px;margin-bottom:10px">${a.coverLetter}</div>` : ''}
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="badge badge-${a.status}">${a.status}</span>
+              <select onchange="updateStatus('${a._id}', this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:0.85rem">
+                <option value="">Change status</option>
+                <option value="reviewed">Reviewed</option>
+                <option value="shortlisted">Shortlist</option>
+                <option value="rejected">Reject</option>
+                <option value="hired">Hired</option>
+              </select>
+              <button onclick="reviewTeacher('${a.teacher?._id}','${a.teacher?.name?.replace(/'/g,"\\'")||""}')" style="padding:4px 10px;font-size:0.8rem;background:#fef9c3;color:#854d0e;border:none;border-radius:6px;cursor:pointer">⭐ Review</button>
+            </div>
+          </div>`).join('');
+    }
+
+    async function updateStatus(appId, status) {
+      if (!status) return;
+      await api('/api/applications/' + appId + '/status', { method: 'PUT', body: JSON.stringify({ status }) });
+    }
+
+    function closeModal() { document.getElementById('applicantsModal').classList.remove('open'); }
+
+    // ALL APPLICATIONS
+    async function loadAllApplications() {
+      const jobsRes = await api('/api/jobs/school/mine');
+      const jobs = await jobsRes.json();
+      const wrap = document.getElementById('applicationsWrap');
+      wrap.innerHTML = '';
+      for (const job of jobs.filter(j => j.isActive)) {
+        const res = await api('/api/jobs/' + job._id + '/applicants');
+        const apps = await res.json();
+        if (apps.length > 0) {
+          wrap.innerHTML += `<div class="table-wrap" style="margin-bottom:24px">
+            <div class="table-header"><h3>${job.title} (${job.subject})</h3><span style="color:var(--text-muted)">${apps.length} applicants</span></div>
+            <table><thead><tr><th>Name</th><th>Role</th><th>Exp</th><th>Badge</th><th>Contact</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody>${apps.map(a => `
+              <tr>
+                <td><strong>${a.teacher?.name}</strong></td>
+                <td>${a.teacher?.role}</td>
+                <td>${a.teacher?.experience} yrs</td>
+                <td><span class="badge badge-${a.teacher?.assessmentBadge}">${a.teacher?.assessmentBadge === 'none' ? 'None' : a.teacher?.assessmentBadge}</span></td>
+                <td style="font-size:0.85rem">${a.teacher?.email}</td>
+                <td><span class="badge badge-${a.status}">${a.status}</span></td>
+                <td>
+                  <select onchange="updateStatus('${a._id}', this.value)" style="padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:0.8rem">
+                    <option value="">Update</option>
+                    <option value="shortlisted">Shortlist</option>
+                    <option value="rejected">Reject</option>
+                    <option value="hired">Hired</option>
+                  </select>
+                </td>
+              </tr>`).join('')}</tbody></table></div>`;
+        }
+      }
+      if (!wrap.innerHTML) wrap.innerHTML = '<p style="color:var(--text-muted)">No applications yet</p>';
+    }
+
+    // REVIEW TEACHER
+    async function reviewTeacher(teacherId, teacherName) {
+      const rating = prompt(`Rate ${teacherName} (1-5 stars):`);
+      if (!rating || isNaN(rating) || rating < 1 || rating > 5) return;
+      const comment = prompt('Add a comment (optional):') || '';
+      const subject = prompt('Subject they taught:') || '';
+      const res = await api('/api/reviews', {
+        method: 'POST',
+        body: JSON.stringify({ teacherId, rating: Number(rating), comment, subject })
+      });
+      if (res.ok) alert('Review submitted! Thank you.');
+      else { const d = await res.json(); alert(d.error); }
+    }
+
+    // ANALYTICS
+    async function loadAnalytics() {
+      const jobsRes = await api('/api/jobs/school/mine');
+      const jobs = await jobsRes.json();
+      const totalViews = jobs.reduce((s, j) => s + (j.views || 0), 0);
+      const totalApps = jobs.reduce((s, j) => s + (j.applicants || 0), 0);
+      const convRate = totalViews > 0 ? ((totalApps / totalViews) * 100).toFixed(1) : 0;
+
+      document.getElementById('analyticsStats').innerHTML = `
+        <div class="stat-card"><div class="stat-num">${totalViews}</div><div class="stat-label">Total Job Views</div></div>
+        <div class="stat-card"><div class="stat-num">${totalApps}</div><div class="stat-label">Total Applications</div></div>
+        <div class="stat-card"><div class="stat-num">${convRate}%</div><div class="stat-label">Apply Rate</div></div>
+        <div class="stat-card"><div class="stat-num">${jobs.filter(j => j.isActive).length}</div><div class="stat-label">Active Jobs</div></div>`;
+
+      document.getElementById('analyticsTable').innerHTML = jobs.map(j => {
+        const conv = j.views > 0 ? ((j.applicants / j.views) * 100).toFixed(1) : 0;
+        return `<tr>
+          <td><strong>${j.title}</strong></td>
+          <td>${j.subject}</td>
+          <td>${j.views || 0}</td>
+          <td>${j.applicants || 0}</td>
+          <td><span style="color:${conv > 5 ? '#16a34a' : '#6b7280'};font-weight:600">${conv}%</span></td>
+          <td><span class="badge ${j.isActive ? 'badge-verified' : 'badge-none'}">${j.isActive ? 'Active' : 'Closed'}</span></td>
+        </tr>`;
+      }).join('') || '<tr><td colspan="6" style="text-align:center;padding:24px;color:#6b7280">Post jobs to see analytics</td></tr>';
+    }
+
+    // INIT
+    loadOverview();
+
+    // Mobile sidebar toggle
+    const dashHamburger  = document.getElementById('dashHamburger');
+    const dashSidebar    = document.getElementById('dashSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    function openSidebar()  { dashSidebar.classList.add('open'); sidebarOverlay.classList.add('open'); dashHamburger.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeSidebar() { dashSidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); dashHamburger.classList.remove('open'); document.body.style.overflow=''; }
+    dashHamburger.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    document.querySelectorAll('.sidebar-nav a').forEach(a => {
+      a.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+    });
+  </script>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-bottom-nav-inner">
+      <a href="#" data-tab="overview" onclick="switchTab('overview')"><span class="m-icon">📊</span>Overview</a>
+      <a href="#" data-tab="post-job" onclick="switchTab('post-job')"><span class="m-icon">➕</span>Post Job</a>
+      <a href="#" data-tab="my-jobs" onclick="switchTab('my-jobs')"><span class="m-icon">📋</span>My Jobs</a>
+      <a href="#" data-tab="applications" onclick="switchTab('applications')"><span class="m-icon">📩</span>Applicants</a>
+      <a href="#" data-tab="browse-teachers" onclick="switchTab('browse-teachers')"><span class="m-icon">👨‍🏫</span>Teachers</a>
+    </div>
+  </nav>
+</body>
+</html>

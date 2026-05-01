@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Profile — Lambence Hire</title>
+  <meta property="og:title" content="Teacher Profile on Lambence Hire" />
+  <meta property="og:description" content="View verified teacher profile on Lambence Hire" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .profile-hero { background: linear-gradient(135deg, #1a56db, #1e40af); color: white; padding: 48px 24px; }
+    .profile-inner { max-width: 900px; margin: 0 auto; display: flex; gap: 32px; align-items: center; }
+    .profile-avatar { width: 96px; height: 96px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 800; flex-shrink: 0; border: 3px solid rgba(255,255,255,0.4); }
+    .profile-info h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 6px; }
+    .profile-meta { opacity: 0.85; margin-bottom: 12px; }
+    .profile-body { max-width: 900px; margin: 0 auto; padding: 32px 24px; display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .profile-section { background: white; border-radius: 14px; padding: 28px; box-shadow: var(--shadow); margin-bottom: 20px; }
+    .profile-section h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .info-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .info-row:last-child { border: none; }
+    .info-label { color: var(--text-muted); }
+    .stars { color: #f59e0b; font-size: 1.1rem; }
+    .review-card { padding: 14px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; }
+    .review-school { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+    .review-text { font-size: 0.85rem; color: var(--text-muted); }
+    .share-bar { background: white; border-top: 1px solid var(--border); padding: 16px 24px; position: sticky; bottom: 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); }
+    .share-btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .share-wa { background: #25d366; color: white; }
+    .share-li { background: #0077b5; color: white; }
+    .share-copy { background: var(--grey); color: var(--text); border: 1px solid var(--border); }
+    @media(max-width:768px) { .profile-body { grid-template-columns: 1fr; } .profile-inner { flex-direction: column; text-align: center; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+      <div class="nav-links">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="school-login.html" class="btn-primary">Hire Teachers</a>
+      </div>
+    </div>
+  </nav>
+
+  <div id="loadingState" style="text-align:center;padding:80px;color:var(--text-muted)">Loading profile...</div>
+
+  <div id="profileContent" style="display:none">
+    <div class="profile-hero">
+      <div class="profile-inner">
+        <div class="profile-avatar" id="pAvatar"></div>
+        <div class="profile-info">
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+            <h1 id="pName"></h1>
+            <span class="badge" id="pBadge" style="font-size:0.9rem;padding:6px 14px"></span>
+          </div>
+          <div class="profile-meta" id="pMeta"></div>
+          <div style="display:flex;gap:24px;flex-wrap:wrap">
+            <span id="pViews" style="font-size:0.9rem;opacity:0.8"></span>
+            <span id="pRating" style="font-size:0.9rem;opacity:0.8"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div>
+        <div class="profile-section" id="bioSection" style="display:none">
+          <h3>About</h3>
+          <p id="pBio" style="color:var(--text-muted);line-height:1.6"></p>
+        </div>
+
+        <div class="profile-section">
+          <h3>Professional Details</h3>
+          <div class="info-row"><span class="info-label">Role</span><span id="dRole"></span></div>
+          <div class="info-row"><span class="info-label">Subjects</span><span id="dSubjects"></span></div>
+          <div class="info-row"><span class="info-label">Experience</span><span id="dExp"></span></div>
+          <div class="info-row"><span class="info-label">Qualification</span><span id="dQual"></span></div>
+          <div class="info-row"><span class="info-label">Current School</span><span id="dCurrent"></span></div>
+          <div class="info-row"><span class="info-label">Location</span><span id="dCity"></span></div>
+          <div class="info-row"><span class="info-label">Availability</span><span id="dAvail"></span></div>
+        </div>
+
+        <div class="profile-section" id="reviewsSection">
+          <h3>School Reviews</h3>
+          <div id="reviewsList"><p style="color:var(--text-muted);font-size:0.9rem">No reviews yet</p></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="profile-section">
+          <h3>Assessment</h3>
+          <div id="assessmentInfo" style="text-align:center;padding:16px 0">
+            <div id="scoreCircle" style="width:90px;height:90px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:1.5rem;font-weight:800;color:var(--blue)"></div>
+            <div id="badgeDisplay"></div>
+            <div id="subjectDisplay" style="color:var(--text-muted);font-size:0.85rem;margin-top:6px"></div>
+          </div>
+        </div>
+
+        <div class="profile-section">
+          <h3>Quick Stats</h3>
+          <div class="info-row"><span class="info-label">Profile Views</span><span id="statViews">0</span></div>
+          <div class="info-row"><span class="info-label">Avg Rating</span><span id="statRating">—</span></div>
+          <div class="info-row"><span class="info-label">Reviews</span><span id="statReviews">0</span></div>
+          <div class="info-row"><span class="info-label">Member Since</span><span id="statJoined"></span></div>
+        </div>
+
+        <div class="profile-section" style="text-align:center">
+          <h3>Hire This Teacher</h3>
+          <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px">Register your school to contact and hire</p>
+          <a href="school-register.html" class="btn-primary" style="display:block;text-align:center">Register School</a>
+          <a href="school-login.html" class="btn-outline" style="display:block;text-align:center;margin-top:10px">Already Registered</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="share-bar" id="shareBar" style="display:none">
+    <button class="share-btn share-wa" onclick="shareWhatsApp()">💬 Share on WhatsApp</button>
+    <button class="share-btn share-li" onclick="shareLinkedIn()">🔗 Share on LinkedIn</button>
+    <button class="share-btn share-copy" onclick="copyLink()">📋 Copy Link</button>
+  </div>
+
+  <script>
+    const slug = new URLSearchParams(window.location.search).get('t');
+    const profileUrl = window.location.href;
+
+    async function loadProfile() {
+      if (!slug) {
+        document.getElementById('loadingState').textContent = 'Invalid profile link';
+        return;
+      }
+      const res = await fetch('/api/teachers/slug/' + slug);
+      if (!res.ok) { document.getElementById('loadingState').textContent = 'Profile not found'; return; }
+      const { teacher: t, reviews } = await res.json();
+
+      document.title = t.name + ' — Lambence Hire';
+      document.querySelector('meta[property="og:title"]').content = t.name + ' | ' + t.role + ' on Lambence Hire';
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('profileContent').style.display = 'block';
+      document.getElementById('shareBar').style.display = 'flex';
+
+      document.getElementById('pAvatar').textContent = t.name.substring(0, 2).toUpperCase();
+      document.getElementById('pName').textContent = t.name;
+
+      const badge = document.getElementById('pBadge');
+      if (t.assessmentBadge !== 'none') {
+        badge.textContent = t.assessmentBadge === 'expert' ? '★ Expert' : '✓ Verified';
+        badge.className = 'badge badge-' + t.assessmentBadge;
+      }
+
+      document.getElementById('pMeta').textContent = `${t.role} • ${(t.subjects || []).join(', ')} • ${t.city}, ${t.state}`;
+      document.getElementById('pViews').textContent = `👁 ${t.profileViews || 0} views`;
+      if (t.totalReviews > 0) document.getElementById('pRating').textContent = `⭐ ${t.avgRating}/5 (${t.totalReviews} reviews)`;
+
+      if (t.bio) { document.getElementById('pBio').textContent = t.bio; document.getElementById('bioSection').style.display = 'block'; }
+
+      document.getElementById('dRole').textContent = t.role;
+      document.getElementById('dSubjects').textContent = (t.subjects || []).join(', ') || '—';
+      document.getElementById('dExp').textContent = t.experience + ' years';
+      document.getElementById('dQual').textContent = t.qualification || '—';
+      document.getElementById('dCurrent').textContent = t.currentSchool || '—';
+      document.getElementById('dCity').textContent = `${t.city}, ${t.state}`;
+      document.getElementById('dAvail').innerHTML = t.isAvailable ? '<span style="color:#16a34a;font-weight:600">✓ Open to opportunities</span>' : '<span style="color:#6b7280">Not available</span>';
+
+      // Assessment circle
+      const scoreEl = document.getElementById('scoreCircle');
+      if (t.assessmentScore > 0) {
+        scoreEl.textContent = t.assessmentScore + '%';
+        if (t.assessmentBadge === 'expert') scoreEl.style.background = '#fef3c7';
+      } else {
+        scoreEl.textContent = '—';
+      }
+      document.getElementById('badgeDisplay').innerHTML = t.assessmentBadge !== 'none'
+        ? `<span class="badge badge-${t.assessmentBadge}" style="font-size:0.9rem">${t.assessmentBadge === 'expert' ? '★ Expert' : '✓ Verified'}</span>`
+        : '<span style="color:var(--text-muted);font-size:0.85rem">Not assessed</span>';
+      document.getElementById('subjectDisplay').textContent = t.assessmentSubject ? 'Subject: ' + t.assessmentSubject : '';
+
+      document.getElementById('statViews').textContent = t.profileViews || 0;
+      document.getElementById('statRating').textContent = t.totalReviews > 0 ? '⭐ ' + t.avgRating + '/5' : '—';
+      document.getElementById('statReviews').textContent = t.totalReviews || 0;
+      document.getElementById('statJoined').textContent = new Date(t.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+
+      // Reviews
+      if (reviews && reviews.length > 0) {
+        document.getElementById('reviewsList').innerHTML = reviews.map(r => `
+          <div class="review-card">
+            <div class="review-school">${r.schoolName || 'School'} ${r.subject ? '• ' + r.subject : ''}</div>
+            <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+            ${r.comment ? `<div class="review-text">${r.comment}</div>` : ''}
+          </div>`).join('');
+      }
+    }
+
+    function shareWhatsApp() {
+      const text = encodeURIComponent(`Check out this teacher's profile on Lambence Hire: ${profileUrl}`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    }
+
+    function shareLinkedIn() {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(profileUrl)}`, '_blank');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(profileUrl).then(() => alert('Profile link copied!'));
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard — Lambence Hire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- MOBILE TOP BAR -->
+  <div class="mobile-topbar">
+    <a href="/" class="m-logo" style="text-decoration:none">Lambence<span>Hire</span></a>
+    <button class="hamburger white" id="dashHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="dashboard">
+    <div class="sidebar" id="dashSidebar">
+      <a href="/" class="sidebar-logo" style="display:block;text-decoration:none">Lambence<span>Hire</span></a>
+      <nav class="sidebar-nav">
+        <a href="#" class="active" data-tab="overview">📊 Overview</a>
+        <a href="#" data-tab="browse-jobs">🔍 Browse Jobs</a>
+        <a href="#" data-tab="saved-jobs">🔖 Saved Jobs</a>
+        <a href="#" data-tab="my-applications">📩 My Applications</a>
+        <a href="#" data-tab="assessment">🏆 Take Assessment</a>
+        <a href="#" data-tab="profile">👤 My Profile</a>
+        <a href="#" id="shareProfileBtn" style="color:#60a5fa">🔗 Share Profile</a>
+        <a href="#" id="logoutBtn">🚪 Logout</a>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div id="teacherName" class="page-title">Welcome!</div>
+
+      <!-- OVERVIEW -->
+      <div id="tab-overview" class="tab-content">
+        <!-- Profile Completion Banner -->
+        <div id="completionBanner" style="background:white;border-radius:12px;padding:20px 24px;margin-bottom:20px;box-shadow:var(--shadow);display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <div><strong>Profile Completion</strong> — <span id="completionPct" style="color:var(--blue);font-weight:700"></span></div>
+            <span id="completionTip" style="font-size:0.85rem;color:var(--text-muted)"></span>
+          </div>
+          <div style="height:8px;background:var(--border);border-radius:4px">
+            <div id="completionBar" style="height:100%;background:var(--blue);border-radius:4px;transition:width 0.5s"></div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num" id="oApps">0</div><div class="stat-label">Applications Sent</div></div>
+          <div class="stat-card"><div class="stat-num" id="oShortlisted">0</div><div class="stat-label">Shortlisted</div></div>
+          <div class="stat-card"><div class="stat-num" id="oViews">0</div><div class="stat-label">Profile Views</div></div>
+          <div class="stat-card"><div class="stat-num" id="oBadge">—</div><div class="stat-label">Assessment Badge</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-header"><h3>Recent Applications</h3><a href="#" class="btn-primary" onclick="switchTab('browse-jobs')">Browse Jobs</a></div>
+          <table><thead><tr><th>Job Title</th><th>School</th><th>City</th><th>Status</th><th>Applied On</th></tr></thead>
+          <tbody id="recentAppsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- BROWSE JOBS -->
+      <div id="tab-browse-jobs" class="tab-content" style="display:none">
+        <h2 class="page-title">Browse Jobs</h2>
+        <div class="jobs-filters">
+          <div class="filter-group"><label>Subject</label><input id="fjSubject" placeholder="e.g. Math" /></div>
+          <div class="filter-group"><label>City</label><input id="fjCity" placeholder="e.g. Delhi" /></div>
+          <div class="filter-group"><label>Type</label>
+            <select id="fjType"><option value="">All Types</option><option value="full-time">Full Time</option><option value="part-time">Part Time</option><option value="contract">Contract</option><option value="visiting">Visiting</option></select>
+          </div>
+          <button class="btn-primary" onclick="loadJobs()">Search</button>
+        </div>
+        <div id="jobsGrid" class="jobs-grid"></div>
+        <div id="jobsPagination" style="text-align:center;margin-top:24px"></div>
+      </div>
+
+      <!-- SAVED JOBS -->
+      <div id="tab-saved-jobs" class="tab-content" style="display:none">
+        <h2 class="page-title">Saved Jobs</h2>
+        <div id="savedJobsGrid" class="jobs-grid"></div>
+      </div>
+
+      <!-- MY APPLICATIONS -->
+      <div id="tab-my-applications" class="tab-content" style="display:none">
+        <h2 class="page-title">My Applications</h2>
+        <div class="table-wrap">
+          <table><thead><tr><th>Job</th><th>School</th><th>Subject</th><th>Type</th><th>Status</th><th>Applied On</th></tr></thead>
+          <tbody id="myAppsTable"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ASSESSMENT -->
+      <div id="tab-assessment" class="tab-content" style="display:none">
+        <h2 class="page-title">Subject Assessment</h2>
+        <div id="assessmentHome">
+          <div style="background:white;border-radius:14px;padding:32px;max-width:600px;box-shadow:var(--shadow)">
+            <h3 style="margin-bottom:12px">Get Lambence Verified</h3>
+            <p style="color:var(--text-muted);margin-bottom:24px">Pass our subject assessment to get a Verified or Expert badge. Schools prefer verified teachers.</p>
+            <div class="badge-levels" style="margin-bottom:24px">
+              <div class="badge-item verified"><span>✓ Verified</span><p>Score 60–79%</p></div>
+              <div class="badge-item expert"><span>★ Expert</span><p>Score 80%+</p></div>
+            </div>
+            <div class="form-group"><label>Select Subject *</label>
+              <select id="assessSubject"><option value="">Loading subjects...</option></select>
+            </div>
+            <button class="btn-primary" onclick="startAssessment()">Start Test (20 Questions)</button>
+          </div>
+        </div>
+        <div id="assessmentTest" style="display:none"></div>
+        <div id="assessmentResult" style="display:none"></div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="tab-profile" class="tab-content" style="display:none">
+        <h2 class="page-title">My Profile</h2>
+        <div style="background:white;border-radius:14px;padding:32px;max-width:700px;box-shadow:var(--shadow)">
+          <div class="success-msg" id="profileOk"></div>
+          <form id="profileForm">
+            <div class="form-row">
+              <div class="form-group"><label>Name</label><input id="pName" /></div>
+              <div class="form-group"><label>Phone</label><input id="pPhone" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>City</label><input id="pCity" /></div>
+              <div class="form-group"><label>State</label><input id="pState" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label>Experience (years)</label><input type="number" id="pExp" min="0" /></div>
+              <div class="form-group"><label>Expected Salary (₹/mo)</label><input type="number" id="pSalary" /></div>
+            </div>
+            <div class="form-group"><label>Subjects (comma separated)</label><input id="pSubjects" placeholder="Mathematics, Physics" /></div>
+            <div class="form-group"><label>Qualification</label><input id="pQual" placeholder="B.Ed, M.Sc, PhD" /></div>
+            <div class="form-group"><label>Current School/College</label><input id="pCurrent" /></div>
+            <div class="form-group"><label>Bio</label><textarea id="pBio" rows="3" placeholder="Brief about yourself..."></textarea></div>
+            <div class="form-group" style="display:flex;align-items:center;gap:12px">
+              <input type="checkbox" id="pAvailable" style="width:auto" />
+              <label for="pAvailable" style="margin:0">Available for new opportunities</label>
+            </div>
+            <button type="submit" class="btn-primary">Save Profile</button>
+          </form>
+
+          <!-- Resume Upload Section -->
+          <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border)">
+            <h3 style="font-weight:700;margin-bottom:6px">Resume / CV</h3>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px">Upload PDF, DOC, or DOCX (max 5MB). Schools can download your resume.</p>
+            <div id="resumeStatus" style="margin-bottom:12px"></div>
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <label style="cursor:pointer">
+                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="display:none" onchange="uploadResume()" />
+                <span class="btn-primary" style="display:inline-block">📄 Upload Resume</span>
+              </label>
+              <button id="deleteResumeBtn" onclick="deleteResume()" class="btn-outline" style="color:#dc2626;border-color:#dc2626;display:none">Delete Resume</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dummy form close tag fix -->
+      <div style="display:none"><form id="_dummy">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOB APPLY MODAL -->
+  <div class="modal-overlay" id="applyModal">
+    <div class="modal">
+      <span class="modal-close" onclick="closeApplyModal()">✕</span>
+      <h3 id="applyJobTitle">Apply for Job</h3>
+      <p id="applyJobMeta" style="color:var(--text-muted);margin-bottom:20px"></p>
+      <div class="form-group"><label>Cover Letter (optional)</label><textarea id="coverLetter" rows="4" placeholder="Why are you a good fit for this role?"></textarea></div>
+      <div class="error-msg" id="applyErr"></div>
+      <div class="success-msg" id="applyOk"></div>
+      <button class="btn-primary" onclick="submitApplication()">Submit Application</button>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('teacherToken');
+    if (!token) window.location.href = 'teacher-login.html';
+    const tData = JSON.parse(localStorage.getItem('teacherData') || '{}');
+    document.getElementById('teacherName').textContent = 'Welcome, ' + (tData.name || 'Teacher');
+
+    let currentJobId = null;
+    let currentPage = 1;
+
+    function api(url, opts = {}) {
+      return fetch(url, { ...opts, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', ...(opts.headers || {}) } });
+    }
+
+    function switchTab(name) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+      document.querySelectorAll('.mobile-bottom-nav a').forEach(a => a.classList.remove('active'));
+      document.getElementById('tab-' + name).style.display = 'block';
+      document.querySelectorAll(`[data-tab="${name}"]`).forEach(el => el.classList.add('active'));
+      if (name === 'overview') loadOverview();
+      if (name === 'browse-jobs') loadJobs();
+      if (name === 'saved-jobs') loadSavedJobs();
+      if (name === 'my-applications') loadMyApplications();
+      if (name === 'profile') loadProfile();
+      if (name === 'assessment') loadAssessmentSubjects();
+    }
+
+    // Profile completion score
+    function calcCompletion(p) {
+      const fields = [
+        [p.phone, 'Add phone number'],
+        [p.city, 'Add city'],
+        [p.subjects?.length, 'Add subjects'],
+        [p.experience, 'Add experience'],
+        [p.qualification, 'Add qualification'],
+        [p.bio, 'Add bio'],
+        [p.expectedSalary, 'Add expected salary'],
+        [p.assessmentBadge !== 'none', 'Take assessment for Verified badge']
+      ];
+      const done = fields.filter(f => f[0]).length;
+      const pct = Math.round((done / fields.length) * 100);
+      const missing = fields.filter(f => !f[0]).map(f => f[1]);
+      return { pct, tip: missing[0] || 'Profile complete!' };
+    }
+
+    document.querySelectorAll('.sidebar-nav a[data-tab]').forEach(a => {
+      a.addEventListener('click', e => { e.preventDefault(); switchTab(a.dataset.tab); });
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', e => {
+      e.preventDefault();
+      localStorage.removeItem('teacherToken');
+      localStorage.removeItem('teacherData');
+      window.location.href = '/';
+    });
+
+    // SHARE PROFILE
+    document.getElementById('shareProfileBtn').addEventListener('click', async e => {
+      e.preventDefault();
+      const res = await api('/api/teachers/me/profile');
+      const p = await res.json();
+      if (p.profileSlug) {
+        const url = window.location.origin + '/teacher-profile.html?t=' + p.profileSlug;
+        const wa = `https://wa.me/?text=${encodeURIComponent('Check my teaching profile on Lambence Hire: ' + url)}`;
+        const choice = confirm(`Share your profile?\n\n${url}\n\nClick OK to share on WhatsApp, Cancel to copy link.`);
+        if (choice) window.open(wa, '_blank');
+        else navigator.clipboard.writeText(url).then(() => alert('Profile link copied!'));
+      }
+    });
+
+    // OVERVIEW
+    async function loadOverview() {
+      const res = await api('/api/applications/mine');
+      const apps = await res.json();
+      document.getElementById('oApps').textContent = apps.length;
+      document.getElementById('oShortlisted').textContent = apps.filter(a => a.status === 'shortlisted').length;
+
+      const profileRes = await api('/api/teachers/me/profile');
+      const profile = await profileRes.json();
+      document.getElementById('oBadge').textContent = profile.assessmentBadge === 'none' ? 'None' : profile.assessmentBadge;
+      document.getElementById('oViews').textContent = profile.profileViews || 0;
+
+      // Profile completion
+      const { pct, tip } = calcCompletion(profile);
+      const banner = document.getElementById('completionBanner');
+      if (pct < 100) {
+        banner.style.display = 'block';
+        document.getElementById('completionPct').textContent = pct + '%';
+        document.getElementById('completionTip').textContent = '→ ' + tip;
+        document.getElementById('completionBar').style.width = pct + '%';
+      }
+
+      document.getElementById('recentAppsTable').innerHTML = apps.slice(0, 6).map(a => `
+        <tr>
+          <td><strong>${a.job?.title || 'N/A'}</strong></td>
+          <td>${a.job?.schoolName || 'N/A'}</td>
+          <td>${a.job?.city || ''}</td>
+          <td><span class="badge badge-${a.status}">${a.status}</span></td>
+          <td>${new Date(a.createdAt).toLocaleDateString('en-IN')}</td>
+        </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#6b7280;padding:24px">No applications yet</td></tr>';
+    }
+
+    // BROWSE JOBS
+    async function loadJobs() {
+      const params = new URLSearchParams();
+      const s = document.getElementById('fjSubject').value;
+      const c = document.getElementById('fjCity').value;
+      const t = document.getElementById('fjType').value;
+      if (s) params.set('subject', s);
+      if (c) params.set('city', c);
+      if (t) params.set('type', t);
+      params.set('page', currentPage);
+
+      const res = await fetch('/api/jobs?' + params);
+      const data = await res.json();
+
+      document.getElementById('jobsGrid').innerHTML = (data.jobs || []).map(j => `
+        <div class="job-card ${j.isFeatured ? 'featured' : ''}">
+          ${j.isFeatured ? '<div style="font-size:0.75rem;color:var(--blue);font-weight:700;margin-bottom:6px">⭐ FEATURED</div>' : ''}
+          <div class="job-school">${j.schoolName} • ${j.schoolType}</div>
+          <div class="job-title">${j.title}</div>
+          <div class="job-meta">
+            <span class="job-tag">${j.subject}</span>
+            <span class="job-tag">${j.type}</span>
+            <span class="job-tag">${j.city}</span>
+            ${j.level !== 'all' ? `<span class="job-tag">${j.level}</span>` : ''}
+          </div>
+          ${j.salaryMin ? `<div class="job-salary">₹${j.salaryMin.toLocaleString()} – ₹${j.salaryMax.toLocaleString()}/month</div>` : ''}
+          <div class="job-footer">
+            <span class="job-date">Posted ${new Date(j.createdAt).toLocaleDateString('en-IN')}</span>
+            <div style="display:flex;gap:8px">
+              <button style="padding:6px 12px;font-size:0.85rem;background:var(--grey);border:1px solid var(--border);border-radius:8px;cursor:pointer" onclick="saveJob('${j._id}', this)" title="Save job">🔖</button>
+              <button class="btn-primary" style="padding:6px 16px;font-size:0.85rem" onclick="openApplyModal('${j._id}','${j.title.replace(/'/g,"\\'")}','${j.schoolName.replace(/'/g,"\\'")}')">Apply</button>
+            </div>
+          </div>
+        </div>`).join('') || '<p style="color:var(--text-muted)">No jobs found</p>';
+    }
+
+    function openApplyModal(jobId, title, school) {
+      currentJobId = jobId;
+      document.getElementById('applyJobTitle').textContent = title;
+      document.getElementById('applyJobMeta').textContent = school;
+      document.getElementById('applyErr').style.display = 'none';
+      document.getElementById('applyOk').style.display = 'none';
+      document.getElementById('coverLetter').value = '';
+      document.getElementById('applyModal').classList.add('open');
+    }
+    function closeApplyModal() { document.getElementById('applyModal').classList.remove('open'); }
+
+    async function saveJob(jobId, btn) {
+      const res = await api('/api/saved/' + jobId, { method: 'POST' });
+      if (res.ok) { btn.textContent = '✅'; btn.disabled = true; }
+      else { const d = await res.json(); if (d.error === 'Already saved') { btn.textContent = '✅'; btn.disabled = true; } }
+    }
+
+    async function loadSavedJobs() {
+      const res = await api('/api/saved');
+      const saved = await res.json();
+      document.getElementById('savedJobsGrid').innerHTML = saved.length
+        ? saved.map(s => s.job ? `
+          <div class="job-card ${!s.job.isActive ? 'opacity:0.6' : ''}">
+            ${!s.job.isActive ? '<div style="font-size:0.75rem;color:#dc2626;font-weight:600;margin-bottom:6px">⚠ Job Closed</div>' : ''}
+            <div class="job-school">${s.job.schoolName}</div>
+            <div class="job-title">${s.job.title}</div>
+            <div class="job-meta">
+              <span class="job-tag">${s.job.subject}</span>
+              <span class="job-tag">${s.job.type}</span>
+              <span class="job-tag">${s.job.city}</span>
+            </div>
+            ${s.job.salaryMin ? `<div class="job-salary">₹${s.job.salaryMin.toLocaleString()} – ₹${s.job.salaryMax.toLocaleString()}/mo</div>` : ''}
+            <div class="job-footer">
+              <span class="job-date">Saved ${new Date(s.createdAt).toLocaleDateString('en-IN')}</span>
+              ${s.job.isActive ? `<button class="btn-primary" style="padding:6px 16px;font-size:0.85rem" onclick="openApplyModal('${s.job._id}','${s.job.title.replace(/'/g,"\\'")}','${s.job.schoolName.replace(/'/g,"\\'")}')">Apply</button>` : ''}
+            </div>
+          </div>` : '').join('')
+        : '<p style="color:var(--text-muted)">No saved jobs yet. Browse jobs and click 🔖 to save.</p>';
+    }
+
+    async function submitApplication() {
+      const err = document.getElementById('applyErr');
+      const ok = document.getElementById('applyOk');
+      err.style.display = 'none';
+      const res = await api('/api/applications', {
+        method: 'POST',
+        body: JSON.stringify({ jobId: currentJobId, coverLetter: document.getElementById('coverLetter').value })
+      });
+      const data = await res.json();
+      if (!res.ok) { err.textContent = data.error; err.style.display = 'block'; return; }
+      ok.textContent = 'Application submitted!';
+      ok.style.display = 'block';
+      setTimeout(closeApplyModal, 1500);
+    }
+
+    // MY APPLICATIONS
+    async function loadMyApplications() {
+      const res = await api('/api/applications/mine');
+      const apps = await res.json();
+      document.getElementById('myAppsTable').innerHTML = apps.map(a => `
+        <tr>
+          <td><strong>${a.job?.title || 'N/A'}</strong></td>
+          <td>${a.job?.schoolName || 'N/A'}</td>
+          <td>${a.job?.subject || ''}</td>
+          <td>${a.job?.type || ''}</td>
+          <td><span class="badge badge-${a.status}">${a.status}</span></td>
+          <td>${new Date(a.createdAt).toLocaleDateString('en-IN')}</td>
+        </tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:32px">No applications yet</td></tr>';
+    }
+
+    // ASSESSMENT
+    async function loadAssessmentSubjects() {
+      const res = await fetch('/api/assessment/subjects');
+      const subjects = await res.json();
+      const sel = document.getElementById('assessSubject');
+      sel.innerHTML = '<option value="">Select subject</option>' + subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    let testData = {};
+    let answers = {};
+
+    async function startAssessment() {
+      const subject = document.getElementById('assessSubject').value;
+      if (!subject) return alert('Please select a subject');
+      const res = await api('/api/assessment/start/' + encodeURIComponent(subject));
+      const data = await res.json();
+      if (!res.ok) return alert(data.error);
+      testData = data;
+      answers = {};
+      renderTest();
+    }
+
+    function renderTest() {
+      document.getElementById('assessmentHome').style.display = 'none';
+      document.getElementById('assessmentTest').style.display = 'block';
+      const { questions, subject, total } = testData;
+      document.getElementById('assessmentTest').innerHTML = `
+        <div style="background:white;border-radius:14px;padding:28px;max-width:700px;box-shadow:var(--shadow)">
+          <h3 style="margin-bottom:6px">${subject} Assessment</h3>
+          <p style="color:var(--text-muted);margin-bottom:16px">${total} Questions • Pass: 60%</p>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+          <div id="questionsWrap"></div>
+          <button class="btn-primary" onclick="submitAssessment()" style="margin-top:24px">Submit Test</button>
+        </div>`;
+
+      const wrap = document.getElementById('questionsWrap');
+      wrap.innerHTML = questions.map((q, i) => `
+        <div class="question-card">
+          <div class="question-num">Question ${i + 1} of ${total}</div>
+          <div class="question-text">${q.question}</div>
+          <div class="options">
+            ${q.options.map((opt, j) => `
+              <div class="option" id="opt-${q._id}-${j}" onclick="selectAnswer('${q._id}', ${j})">
+                ${String.fromCharCode(65 + j)}. ${opt}
+              </div>`).join('')}
+          </div>
+        </div>`).join('');
+    }
+
+    function selectAnswer(qId, index) {
+      answers[qId] = index;
+      testData.questions.forEach((q, i) => {
+        if (q._id === qId) {
+          q.options.forEach((_, j) => {
+            const el = document.getElementById(`opt-${qId}-${j}`);
+            if (el) el.classList.toggle('selected', j === index);
+          });
+        }
+      });
+      const answered = Object.keys(answers).length;
+      document.getElementById('progressFill').style.width = (answered / testData.total * 100) + '%';
+    }
+
+    async function submitAssessment() {
+      if (Object.keys(answers).length < Math.floor(testData.total * 0.5)) {
+        return alert('Please answer at least half the questions');
+      }
+      const res = await api('/api/assessment/submit', {
+        method: 'POST',
+        body: JSON.stringify({ subject: testData.subject, answers })
+      });
+      const result = await res.json();
+      if (!res.ok) return alert(result.error);
+
+      document.getElementById('assessmentTest').style.display = 'none';
+      document.getElementById('assessmentResult').style.display = 'block';
+      document.getElementById('assessmentResult').innerHTML = `
+        <div style="background:white;border-radius:14px;padding:40px;max-width:500px;text-align:center;box-shadow:var(--shadow)">
+          <div style="font-size:4rem;margin-bottom:16px">${result.passed ? '🎉' : '😔'}</div>
+          <h2 style="margin-bottom:8px">${result.passed ? 'Congratulations!' : 'Keep Practicing!'}</h2>
+          <div style="font-size:3rem;font-weight:800;color:var(--blue);margin:20px 0">${result.score}%</div>
+          <p style="color:var(--text-muted);margin-bottom:20px">${result.correct} correct out of ${result.total} questions</p>
+          ${result.badge !== 'none' ? `<div class="badge badge-${result.badge}" style="font-size:1rem;padding:10px 24px">${result.badge === 'expert' ? '★ Expert Badge Earned!' : '✓ Verified Badge Earned!'}</div>` : '<p style="color:#dc2626">Score 60% or more to get verified</p>'}
+          <button class="btn-primary" style="margin-top:24px" onclick="window.location.reload()">Done</button>
+        </div>`;
+    }
+
+    // PROFILE
+    async function loadProfile() {
+      const res = await api('/api/teachers/me/profile');
+      const p = await res.json();
+      document.getElementById('pName').value = p.name || '';
+      document.getElementById('pPhone').value = p.phone || '';
+      document.getElementById('pCity').value = p.city || '';
+      document.getElementById('pState').value = p.state || '';
+      document.getElementById('pExp').value = p.experience || 0;
+      document.getElementById('pSalary').value = p.expectedSalary || '';
+      document.getElementById('pSubjects').value = (p.subjects || []).join(', ');
+      document.getElementById('pQual').value = p.qualification || '';
+      document.getElementById('pCurrent').value = p.currentSchool || '';
+      document.getElementById('pBio').value = p.bio || '';
+      document.getElementById('pAvailable').checked = p.isAvailable;
+
+      // Resume status
+      const resumeStatus = document.getElementById('resumeStatus');
+      if (p.resume) {
+        resumeStatus.innerHTML = `<span style="color:#16a34a">✓ Resume uploaded — <a href="${p.resume}" target="_blank" style="color:var(--blue)">View / Download</a></span>`;
+        document.getElementById('deleteResumeBtn').style.display = 'inline-block';
+      } else {
+        resumeStatus.innerHTML = '<span style="color:var(--text-muted)">No resume uploaded yet</span>';
+      }
+    }
+
+    async function uploadResume() {
+      const file = document.getElementById('resumeFile').files[0];
+      if (!file) return;
+      const status = document.getElementById('resumeStatus');
+      status.innerHTML = '<span style="color:var(--blue)">Uploading...</span>';
+      const form = new FormData();
+      form.append('resume', file);
+      const res = await fetch('/api/upload/resume', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token },
+        body: form
+      });
+      const data = await res.json();
+      if (res.ok) {
+        status.innerHTML = `<span style="color:#16a34a">✓ Resume uploaded — <a href="${data.url}" target="_blank" style="color:var(--blue)">View</a></span>`;
+        document.getElementById('deleteResumeBtn').style.display = 'inline-block';
+      } else {
+        status.innerHTML = `<span style="color:#dc2626">${data.error}</span>`;
+      }
+    }
+
+    async function deleteResume() {
+      if (!confirm('Delete your resume?')) return;
+      await api('/api/upload/resume', { method: 'DELETE' });
+      document.getElementById('resumeStatus').innerHTML = '<span style="color:var(--text-muted)">Resume deleted</span>';
+      document.getElementById('deleteResumeBtn').style.display = 'none';
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const subjects = document.getElementById('pSubjects').value.split(',').map(s => s.trim()).filter(Boolean);
+      const res = await api('/api/teachers/me/profile', {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: document.getElementById('pName').value,
+          phone: document.getElementById('pPhone').value,
+          city: document.getElementById('pCity').value,
+          state: document.getElementById('pState').value,
+          experience: Number(document.getElementById('pExp').value),
+          expectedSalary: Number(document.getElementById('pSalary').value),
+          subjects,
+          qualification: document.getElementById('pQual').value,
+          currentSchool: document.getElementById('pCurrent').value,
+          bio: document.getElementById('pBio').value,
+          isAvailable: document.getElementById('pAvailable').checked
+        })
+      });
+      if (res.ok) {
+        const ok = document.getElementById('profileOk');
+        ok.textContent = 'Profile updated!';
+        ok.style.display = 'block';
+        setTimeout(() => ok.style.display = 'none', 2000);
+      }
+    });
+
+    // INIT
+    loadOverview();
+
+    // Mobile sidebar toggle
+    const dashHamburger = document.getElementById('dashHamburger');
+    const dashSidebar   = document.getElementById('dashSidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    function openSidebar()  { dashSidebar.classList.add('open'); sidebarOverlay.classList.add('open'); dashHamburger.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeSidebar() { dashSidebar.classList.remove('open'); sidebarOverlay.classList.remove('open'); dashHamburger.classList.remove('open'); document.body.style.overflow=''; }
+    dashHamburger.addEventListener('click', openSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a nav link is clicked (mobile)
+    document.querySelectorAll('.sidebar-nav a').forEach(a => {
+      a.addEventListener('click', () => { if (window.innerWidth <= 768) closeSidebar(); });
+    });
+  </script>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <nav class="mobile-bottom-nav">
+    <div class="mobile-bottom-nav-inner">
+      <a href="#" data-tab="overview" onclick="switchTab('overview')"><span class="m-icon">📊</span>Overview</a>
+      <a href="#" data-tab="browse-jobs" onclick="switchTab('browse-jobs')"><span class="m-icon">🔍</span>Jobs</a>
+      <a href="#" data-tab="my-applications" onclick="switchTab('my-applications')"><span class="m-icon">📩</span>Applied</a>
+      <a href="#" data-tab="assessment" onclick="switchTab('assessment')"><span class="m-icon">🏆</span>Assessment</a>
+      <a href="#" data-tab="profile" onclick="switchTab('profile')"><span class="m-icon">👤</span>Profile</a>
+    </div>
+  </nav>
+</body>
+</html>

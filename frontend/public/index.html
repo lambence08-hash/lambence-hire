@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lambence Hire — India's Teacher & Faculty Hiring Platform</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script src="nav-auth.js" defer></script>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+      <div class="nav-links">
+        <a href="jobs.html">Browse Jobs</a>
+        <a href="salary-insights.html">Salary Insights</a>
+        <a href="school-login.html" class="btn-outline">School Login</a>
+        <a href="teacher-login.html" class="btn-primary">Teacher Login</a>
+      </div>
+      <button class="hamburger" id="navHamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MOBILE NAV DRAWER -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div class="mobile-nav-head">
+      <a href="/" class="logo">Lambence<span>Hire</span></a>
+      <span class="mobile-nav-close" id="mobileNavClose">✕</span>
+    </div>
+    <a href="jobs.html">🔍 Browse Jobs</a>
+    <a href="salary-insights.html">📊 Salary Insights</a>
+    <a href="school-register.html">🏫 Register School</a>
+    <a href="teacher-register.html">👨‍🏫 Register as Teacher</a>
+    <a href="school-login.html" class="btn-outline">School Login</a>
+    <a href="teacher-login.html" class="btn-primary">Teacher Login</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge">India's #1 Teacher Hiring Platform</div>
+      <h1>Hire Verified Teachers.<br/>Find Your Dream School.</h1>
+      <p>Connecting Schools, Colleges & Coaching Institutes with Qualified, Assessed Teachers across India.</p>
+      <div class="landing-search-wrap">
+        <input id="landingSearch" type="text" placeholder="Subject, role, school name..." class="landing-search-input" />
+        <button onclick="window.location.href='jobs.html?q='+encodeURIComponent(document.getElementById('landingSearch').value)" class="landing-search-btn">Search Jobs</button>
+      </div>
+      <div class="hero-btns">
+        <a href="school-register.html" class="btn-primary large">Post a Job — Free</a>
+        <a href="teacher-register.html" class="btn-outline large">I'm a Teacher</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span id="statSchools">500+</span><p>Schools</p></div>
+        <div class="stat"><span id="statTeachers">2000+</span><p>Teachers</p></div>
+        <div class="stat"><span id="statJobs">300+</span><p>Active Jobs</p></div>
+        <div class="stat"><span>12+</span><p>States</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <h2 class="section-title">How It Works</h2>
+    <div class="cards-3">
+      <div class="card">
+        <div class="card-icon">🏫</div>
+        <h3>For Schools & Colleges</h3>
+        <ol>
+          <li>Register your institution</li>
+          <li>Post job openings</li>
+          <li>Browse verified teacher profiles</li>
+          <li>Shortlist & hire directly</li>
+        </ol>
+        <a href="school-register.html" class="btn-primary mt">Get Started Free</a>
+      </div>
+      <div class="card highlight">
+        <div class="card-icon">👨‍🏫</div>
+        <h3>For Teachers & Professors</h3>
+        <ol>
+          <li>Create your profile</li>
+          <li>Take subject assessment</li>
+          <li>Get Verified Badge</li>
+          <li>Apply to jobs</li>
+        </ol>
+        <a href="teacher-register.html" class="btn-white mt">Join Free</a>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Assessment & Verification</h3>
+        <ol>
+          <li>Subject-wise MCQ test</li>
+          <li>Score-based badge system</li>
+          <li>Verified & Expert levels</li>
+          <li>Schools trust verified teachers</li>
+        </ol>
+        <a href="teacher-register.html" class="btn-primary mt">Take Assessment</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE JOBS SECTION -->
+  <section class="section grey" id="liveJobsSection">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2 style="font-size:1.8rem;font-weight:800;margin-bottom:4px">Latest Teaching Jobs</h2>
+          <p style="color:var(--text-muted)" id="liveJobsCount">Loading jobs...</p>
+        </div>
+        <a href="jobs.html" class="btn-primary">View All Jobs →</a>
+      </div>
+
+      <!-- Quick subject filters -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px" id="landingSubjectFilters"></div>
+
+      <!-- Jobs grid -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px" id="landingJobsGrid">
+        <div style="text-align:center;padding:40px;color:var(--text-muted);grid-column:1/-1">Loading jobs...</div>
+      </div>
+
+      <div style="text-align:center;margin-top:28px">
+        <a href="jobs.html" class="btn-outline" style="padding:12px 32px">Browse All Teaching Jobs in India →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTITUTION TYPES -->
+  <section class="section grey">
+    <h2 class="section-title">Who Can Use Lambence Hire?</h2>
+    <div class="cards-4">
+      <div class="type-card">
+        <div class="type-icon">🏫</div>
+        <h4>Schools</h4>
+        <p>CBSE, ICSE, State Board — K-12 teacher hiring</p>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">🎓</div>
+        <h4>Colleges & Universities</h4>
+        <p>Lecturer, Assistant Professor, Professor hiring</p>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">📚</div>
+        <h4>Coaching Institutes</h4>
+        <p>JEE, NEET, UPSC — Subject instructor hiring</p>
+      </div>
+      <div class="type-card">
+        <div class="type-icon">💻</div>
+        <h4>Ed-Tech Companies</h4>
+        <p>Online tutors, content creators, faculty</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BADGE SECTION -->
+  <section class="section">
+    <div class="badge-section">
+      <div class="badge-text">
+        <h2>Lambence Verified Badge</h2>
+        <p>Teachers who pass our subject assessment get a Verified or Expert badge — giving schools confidence to hire the best talent.</p>
+        <div class="badge-levels">
+          <div class="badge-item verified">
+            <span>✓ Verified</span>
+            <p>Score 60–79%</p>
+          </div>
+          <div class="badge-item expert">
+            <span>★ Expert</span>
+            <p>Score 80%+</p>
+          </div>
+        </div>
+        <a href="teacher-register.html" class="btn-primary mt">Get Verified Now</a>
+      </div>
+      <div class="badge-image">
+        <div class="mock-badge">
+          <div class="mock-avatar">AK</div>
+          <h3>Amit Kumar</h3>
+          <p>Mathematics • 8 yrs exp</p>
+          <div class="mock-score expert">★ Expert — 87%</div>
+          <p class="mock-subject">Lambence Verified Teacher</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANS -->
+  <section class="section grey">
+    <h2 class="section-title">Plans for Schools</h2>
+    <div class="cards-3">
+      <div class="plan-card">
+        <h3>Free</h3>
+        <div class="price">₹0 <span>/month</span></div>
+        <ul>
+          <li>✓ 3 job postings</li>
+          <li>✓ View applications</li>
+          <li>✓ Basic teacher profiles</li>
+          <li>✗ Assessment scores hidden</li>
+          <li>✗ Direct contact details</li>
+        </ul>
+        <a href="school-register.html" class="btn-outline mt">Get Started</a>
+      </div>
+      <div class="plan-card popular">
+        <div class="popular-tag">Most Popular</div>
+        <h3>Pro</h3>
+        <div class="price">₹2,499 <span>/month</span></div>
+        <ul>
+          <li>✓ Unlimited job postings</li>
+          <li>✓ Assessment scores visible</li>
+          <li>✓ Direct contact details</li>
+          <li>✓ Browse all teachers</li>
+          <li>✓ Priority support</li>
+        </ul>
+        <a href="school-register.html" class="btn-primary mt">Start Pro</a>
+      </div>
+      <div class="plan-card">
+        <h3>Enterprise</h3>
+        <div class="price">₹8,999 <span>/month</span></div>
+        <ul>
+          <li>✓ Everything in Pro</li>
+          <li>✓ School chain support</li>
+          <li>✓ Bulk hiring dashboard</li>
+          <li>✓ Data export (Excel)</li>
+          <li>✓ Dedicated manager</li>
+        </ul>
+        <a href="mailto:hire@lambence.in" class="btn-outline mt">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="/" class="logo">Lambence<span>Hire</span></a>
+        <p>India's Teacher & Faculty Hiring Platform</p>
+      </div>
+      <div class="footer-links">
+        <div>
+          <h5>Schools</h5>
+          <a href="school-register.html">Register</a>
+          <a href="school-login.html">Login</a>
+          <a href="jobs.html">Post a Job</a>
+        </div>
+        <div>
+          <h5>Teachers</h5>
+          <a href="teacher-register.html">Register</a>
+          <a href="teacher-login.html">Login</a>
+          <a href="jobs.html">Browse Jobs</a>
+        </div>
+        <div>
+          <h5>Company</h5>
+          <a href="#">About</a>
+          <a href="mailto:hire@lambence.in">Contact</a>
+          <a href="admin.html">Admin</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Lambence. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // Load live stats
+    fetch('/api/admin/stats').then(r => r.json()).then(d => {
+      if (d.schools)  document.getElementById('statSchools').textContent  = d.schools + '+';
+      if (d.teachers) document.getElementById('statTeachers').textContent = d.teachers + '+';
+      if (d.jobs)     document.getElementById('statJobs').textContent     = d.jobs + '+';
+    }).catch(() => {});
+
+    // Landing page search
+    document.querySelector('.search-bar button')?.addEventListener('click', () => {
+      const q = document.getElementById('landingSearch').value;
+      window.location.href = 'jobs.html' + (q ? '?q=' + encodeURIComponent(q) : '');
+    });
+    document.getElementById('landingSearch')?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') window.location.href = 'jobs.html?q=' + encodeURIComponent(e.target.value);
+    });
+
+    // Load live jobs on landing page
+    let activeSubjectFilter = '';
+
+    async function loadLandingJobs(subject) {
+      activeSubjectFilter = subject || '';
+      const params = new URLSearchParams({ sort: 'newest', page: 1 });
+      if (subject) params.set('subject', subject);
+      const res = await fetch('/api/jobs?' + params);
+      const data = await res.json();
+
+      document.getElementById('liveJobsCount').textContent =
+        (data.total || 0) + ' active teaching jobs across India';
+
+      // Subject filter buttons
+      if (!subject) {
+        const subjectFilters = document.getElementById('landingSubjectFilters');
+        const allBtn = `<button onclick="loadLandingJobs('')" class="jf-btn active" id="jfAll">All</button>`;
+        const subjectBtns = (data.subjectCounts || []).slice(0, 8).map(s =>
+          `<button onclick="loadLandingJobs('${s._id}')" class="jf-btn" id="jf-${s._id.replace(/\s+/g,'-')}">${s._id} <span style="opacity:0.7">${s.count}</span></button>`
+        ).join('');
+        subjectFilters.innerHTML = allBtn + subjectBtns;
+      } else {
+        document.querySelectorAll('.jf-btn').forEach(b => b.classList.remove('active'));
+        const el = document.getElementById('jf-' + subject.replace(/\s+/g,'-'));
+        if (el) el.classList.add('active');
+        else document.getElementById('jfAll').classList.remove('active');
+      }
+
+      const grid = document.getElementById('landingJobsGrid');
+      const jobs = (data.jobs || []).slice(0, 6);
+      if (!jobs.length) { grid.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px;grid-column:1/-1">No jobs found</p>'; return; }
+
+      grid.innerHTML = jobs.map(j => {
+        const days = Math.floor((Date.now() - new Date(j.createdAt)) / 86400000);
+        const when = days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days + 'd ago';
+        return `
+        <div onclick="window.location.href='jobs.html'" style="background:white;border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow);cursor:pointer;transition:all 0.2s" onmouseover="this.style.borderColor='var(--blue)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''">
+          ${j.isFeatured ? '<div style="font-size:0.72rem;color:#f59e0b;font-weight:700;margin-bottom:6px">⭐ FEATURED</div>' : ''}
+          <div style="font-size:0.82rem;color:var(--blue);font-weight:600;margin-bottom:4px">${j.schoolName} ${j.schoolType ? '• ' + j.schoolType : ''}</div>
+          <div style="font-weight:700;font-size:1rem;margin-bottom:8px;color:var(--text)">${j.title}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+            <span style="background:var(--blue-light);color:var(--blue);padding:3px 10px;border-radius:999px;font-size:0.78rem;font-weight:500">${j.subject}</span>
+            <span style="background:var(--grey);color:var(--text-muted);padding:3px 10px;border-radius:999px;font-size:0.78rem">📍 ${j.city || 'India'}</span>
+            <span style="background:var(--grey);color:var(--text-muted);padding:3px 10px;border-radius:999px;font-size:0.78rem">${j.type}</span>
+            ${j.experience === 0 ? '<span style="background:#dcfce7;color:#16a34a;padding:3px 10px;border-radius:999px;font-size:0.78rem">Freshers OK</span>' : ''}
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border)">
+            <span style="font-weight:700;color:#16a34a;font-size:0.9rem">${j.salaryMin > 0 ? '₹' + j.salaryMin.toLocaleString() + ' – ₹' + j.salaryMax.toLocaleString() + '/mo' : 'Salary not disclosed'}</span>
+            <span style="font-size:0.75rem;color:var(--text-muted)">${when} • ${j.applicants || 0} applied</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    loadLandingJobs('');
+
+    // Mobile hamburger nav
+    const hamburger = document.getElementById('navHamburger');
+    const drawer    = document.getElementById('mobileNavDrawer');
+    const overlay   = document.getElementById('mobileNavOverlay');
+    const closeBtn  = document.getElementById('mobileNavClose');
+    function openNav()  { drawer.classList.add('open'); overlay.classList.add('open'); hamburger.classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeNav() { drawer.classList.remove('open'); overlay.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow=''; }
+    hamburger.addEventListener('click', openNav);
+    overlay.addEventListener('click', closeNav);
+    closeBtn.addEventListener('click', closeNav);
+  </script>
+  <style>
+    .landing-search-wrap { background: white; border-radius: 12px; display: flex; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.2); margin-bottom: 28px; max-width: 680px; margin-left: auto; margin-right: auto; }
+    .landing-search-input { flex: 1; border: none; padding: 14px 20px; font-size: 1rem; outline: none; color: #111; min-width: 0; }
+    .landing-search-btn { background: var(--blue); color: white; border: none; padding: 0 28px; font-size: 1rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .landing-search-btn:hover { background: var(--blue-dark); }
+    @media (max-width: 600px) {
+      .landing-search-wrap { flex-direction: column; border-radius: 12px; overflow: visible; background: transparent; box-shadow: none; gap: 8px; margin-bottom: 20px; }
+      .landing-search-input { border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+      .landing-search-btn { border-radius: 10px; padding: 13px 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    }
+    .jf-btn { padding: 6px 16px; border-radius: 999px; border: 1.5px solid var(--border); background: white; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s; color: var(--text-muted); }
+    .jf-btn:hover, .jf-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+    @media (max-width: 768px) {
+      #liveJobsSection > div { padding: 0 4px; }
+      #liveJobsSection h2 { font-size: 1.35rem !important; }
+      #landingJobsGrid { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 40px 14px 36px; }
+      .hero h1 { font-size: 1.5rem; }
+      .hero-btns .large { padding: 11px 18px; font-size: 0.9rem; }
+      .hero-stats { gap: 14px; }
+      .stat span { font-size: 1.3rem; }
+      .stat p { font-size: 0.8rem; }
+    }
+  </style>
+</body>
+</html>

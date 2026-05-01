@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teaching Jobs in India 2025 — Lambence Hire</title>
+  <meta name="description" content="Find verified teaching jobs for schools, colleges and coaching institutes across India. Apply online on Lambence Hire." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page Layout ─────────────────────────────── */
+    .jobs-page-wrap { max-width: 1280px; margin: 0 auto; padding: 24px 20px; display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+
+    /* ── Hero Search Bar ──────────────────────────── */
+    .search-hero { background: linear-gradient(135deg,#1a56db,#1e40af); padding: 32px 20px; }
+    .search-hero-inner { max-width: 1280px; margin: 0 auto; }
+    .search-hero h1 { color: white; font-size: 1.6rem; font-weight: 800; margin-bottom: 16px; }
+    .search-bar { display: flex; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .search-bar input { flex: 1; border: none; padding: 14px 20px; font-size: 1rem; outline: none; min-width: 0; }
+    .search-bar .search-divider { width: 1px; background: var(--border); margin: 10px 0; }
+    .search-bar .location-input { width: 200px; border: none; padding: 14px 16px; font-size: 0.95rem; outline: none; color: var(--text-muted); }
+    .search-bar button { background: var(--blue); color: white; border: none; padding: 0 32px; font-size: 1rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .search-bar button:hover { background: var(--blue-dark); }
+    .quick-tags { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .quick-tag { background: rgba(255,255,255,0.15); color: white; padding: 5px 14px; border-radius: 999px; font-size: 0.82rem; cursor: pointer; border: 1px solid rgba(255,255,255,0.25); transition: background 0.2s; }
+    .quick-tag:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Filter Sidebar ──────────────────────────── */
+    .filter-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; }
+    .filter-box { background: white; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: var(--shadow); }
+    .filter-box-header { padding: 14px 18px; font-weight: 700; font-size: 0.95rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    .filter-box-header span { font-size: 0.8rem; color: var(--blue); font-weight: 600; }
+    .filter-box-body { padding: 14px 18px; }
+    .filter-option { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; font-size: 0.9rem; }
+    .filter-option input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+    .filter-option label { cursor: pointer; flex: 1; }
+    .filter-count { font-size: 0.8rem; color: var(--text-muted); margin-left: auto; }
+    .filter-salary { display: flex; gap: 8px; }
+    .filter-salary input { flex: 1; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.85rem; width: 0; }
+    .clear-all-btn { width: 100%; padding: 10px; background: #fee2e2; color: #dc2626; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem; margin-bottom: 16px; display: none; }
+
+    /* ── Results Panel ───────────────────────────── */
+    .results-panel { min-width: 0; }
+    .results-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+    .results-count { font-size: 0.95rem; color: var(--text-muted); }
+    .results-count strong { color: var(--text); }
+    .sort-select { padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem; background: white; cursor: pointer; }
+    .active-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .active-filter { background: var(--blue-light); color: var(--blue); padding: 4px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+    .active-filter .remove { cursor: pointer; font-size: 1rem; line-height: 1; }
+
+    /* ── Job Card ────────────────────────────────── */
+    .job-list { display: flex; flex-direction: column; gap: 12px; }
+    .jcard { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; box-shadow: var(--shadow); cursor: pointer; transition: all 0.2s; position: relative; }
+    .jcard:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(26,86,219,0.12); transform: translateY(-1px); }
+    .jcard.featured { border-color: #f59e0b; border-width: 2px; }
+    .jcard-featured-tag { position: absolute; top: -1px; right: 16px; background: #f59e0b; color: white; font-size: 0.72rem; font-weight: 700; padding: 3px 10px; border-radius: 0 0 6px 6px; }
+    .jcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .jcard-school-logo { width: 44px; height: 44px; border-radius: 8px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.1rem; color: var(--blue); flex-shrink: 0; border: 1px solid var(--border); }
+    .jcard-title-wrap { flex: 1; }
+    .jcard-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .jcard-school { font-size: 0.88rem; color: var(--blue); font-weight: 600; }
+    .jcard-verified { font-size: 0.75rem; color: #16a34a; font-weight: 600; }
+    .jcard-save { background: none; border: none; font-size: 1.3rem; cursor: pointer; color: var(--text-muted); padding: 4px; flex-shrink: 0; }
+    .jcard-save.saved { color: var(--blue); }
+    .jcard-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .jcard-tag { font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; font-weight: 500; }
+    .tag-blue { background: var(--blue-light); color: var(--blue); }
+    .tag-green { background: #dcfce7; color: #16a34a; }
+    .tag-orange { background: #fff7ed; color: #c2410c; }
+    .tag-grey { background: var(--grey); color: var(--text-muted); }
+    .jcard-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid var(--border); }
+    .jcard-salary { font-weight: 700; color: #16a34a; font-size: 0.95rem; }
+    .jcard-salary-na { color: var(--text-muted); font-size: 0.85rem; }
+    .jcard-actions { display: flex; gap: 8px; }
+    .jcard-date { font-size: 0.78rem; color: var(--text-muted); }
+    .jcard-apps { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* ── Pagination ──────────────────────────────── */
+    .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 28px; flex-wrap: wrap; }
+    .page-btn { width: 38px; height: 38px; border-radius: 8px; border: 1.5px solid var(--border); background: white; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 600; transition: all 0.2s; }
+    .page-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .page-btn.active { background: var(--blue); color: white; border-color: var(--blue); }
+    .page-btn.prev-next { width: auto; padding: 0 14px; font-size: 0.85rem; }
+
+    /* ── Job Detail Modal ────────────────────────── */
+    .job-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .job-modal-overlay.open { display: flex; }
+    .job-modal { background: white; border-radius: 16px; width: 100%; max-width: 720px; max-height: 90vh; overflow-y: auto; display: flex; flex-direction: column; }
+    .job-modal-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: white; z-index: 1; }
+    .job-modal-close { float: right; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); line-height: 1; }
+    .job-modal-school { font-size: 0.88rem; color: var(--blue); font-weight: 600; margin-bottom: 4px; }
+    .job-modal-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+    .job-modal-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .job-modal-salary { font-size: 1.1rem; font-weight: 700; color: #16a34a; }
+    .job-modal-body { padding: 24px 28px; flex: 1; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 24px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .detail-item { padding: 12px 16px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+    .detail-item:nth-child(even) { border-right: none; }
+    .detail-item:nth-last-child(-n+2) { border-bottom: none; }
+    .detail-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 3px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detail-val { font-weight: 600; font-size: 0.92rem; }
+    .section-heading { font-weight: 700; font-size: 1rem; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--blue-light); }
+    .description-text { font-size: 0.9rem; line-height: 1.7; color: #374151; white-space: pre-wrap; }
+    .school-info-box { background: var(--grey); border-radius: 10px; padding: 16px; margin-top: 20px; display: flex; gap: 14px; align-items: center; }
+    .school-info-logo { width: 52px; height: 52px; border-radius: 10px; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--blue); font-size: 1.2rem; flex-shrink: 0; }
+    .job-modal-footer { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; gap: 12px; justify-content: flex-end; background: white; position: sticky; bottom: 0; }
+
+    /* ── Apply Modal ─────────────────────────────── */
+    .apply-modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 400; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .apply-modal-overlay.open { display: flex; }
+    .apply-modal { background: white; border-radius: 16px; padding: 32px; width: 100%; max-width: 500px; }
+
+    /* ── No Results ──────────────────────────────── */
+    .no-results { text-align: center; padding: 60px 20px; }
+    .no-results .nr-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .no-results h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+    .no-results p { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ── Loading skeleton ────────────────────────── */
+    .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+    .skeleton-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 12px; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media(max-width: 900px) {
+      .jobs-page-wrap { grid-template-columns: 1fr; padding: 16px 12px; }
+      .filter-sidebar { position: static; max-height: none; display: none; }
+      .filter-sidebar.mobile-open { display: block; }
+      .mobile-filter-btn { display: flex !important; }
+      .search-bar .location-input { display: none; }
+      .search-bar .search-divider { display: none; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .detail-item { border-right: none !important; }
+      .search-hero { padding: 20px 14px; }
+      .search-hero h1 { font-size: 1.2rem; margin-bottom: 10px; }
+      .search-bar input { font-size: 0.9rem; padding: 12px 14px; }
+      .search-bar button { padding: 0 18px; font-size: 0.9rem; }
+      .quick-tags { gap: 6px; }
+      .quick-tag { font-size: 0.76rem; padding: 4px 10px; }
+      .jcard { padding: 16px; }
+      .jcard-title { font-size: 0.95rem; }
+      .job-modal-overlay { padding: 0; align-items: flex-end; }
+      .job-modal { border-radius: 20px 20px 0 0; max-height: 92vh; }
+      .job-modal-header { padding: 18px 20px 14px; }
+      .job-modal-body { padding: 16px 20px; }
+      .job-modal-footer { padding: 12px 20px; }
+      .apply-modal-overlay { padding: 0; align-items: flex-end; }
+      .apply-modal { border-radius: 20px 20px 0 0; width: 100%; padding: 24px 20px; }
+    }
+    @media(max-width: 480px) {
+      .jcard-save { display: none; }
+      .results-bar { flex-direction: column; align-items: flex-start; }
+    }
+    .mobile-filter-btn { display: none; background: white; border: 1.5px solid var(--blue); color: var(--blue); padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; align-items: center; gap: 6px; }
+  </style>
+</head>
+<body>
+  <script src="nav-auth.js" defer></script>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="/" class="logo">Lambence<span>Hire</span></a>
+    <div class="nav-links">
+      <a href="jobs.html" style="color:var(--blue);font-weight:700">Teaching Jobs</a>
+      <a href="salary-insights.html">Salary Insights</a>
+      <a href="school-login.html" class="btn-outline">For Schools</a>
+      <a href="teacher-login.html" class="btn-primary">Teacher Login</a>
+    </div>
+    <button class="hamburger" id="navHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="mobile-nav-head">
+    <a href="/" class="logo">Lambence<span>Hire</span></a>
+    <span class="mobile-nav-close" id="mobileNavClose">✕</span>
+  </div>
+  <a href="jobs.html" style="color:var(--blue);font-weight:700">🔍 Teaching Jobs</a>
+  <a href="salary-insights.html">📊 Salary Insights</a>
+  <a href="school-register.html">🏫 Register School</a>
+  <a href="teacher-register.html">👨‍🏫 Register as Teacher</a>
+  <a href="school-login.html" class="btn-outline">School Login</a>
+  <a href="teacher-login.html" class="btn-primary">Teacher Login</a>
+</div>
+
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <div class="search-hero-inner">
+    <h1>Find Teaching Jobs Across India</h1>
+    <div class="search-bar">
+      <input id="heroSearch" type="text" placeholder="Job title, subject, school name..." />
+      <div class="search-divider"></div>
+      <input class="location-input" id="heroCity" type="text" placeholder="City or State" />
+      <button onclick="applySearch()">Search Jobs</button>
+    </div>
+    <div class="quick-tags">
+      <span>Popular:</span>
+      <span class="quick-tag" onclick="quickSearch('Mathematics')">Mathematics</span>
+      <span class="quick-tag" onclick="quickSearch('Physics')">Physics</span>
+      <span class="quick-tag" onclick="quickSearch('English')">English</span>
+      <span class="quick-tag" onclick="quickSearch('Computer Science')">Computer Science</span>
+      <span class="quick-tag" onclick="quickSearch('Biology')">Biology</span>
+      <span class="quick-tag" onclick="quickSearch('Hindi')">Hindi</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="jobs-page-wrap">
+
+  <!-- FILTER SIDEBAR -->
+  <div class="filter-sidebar" id="filterSidebar">
+
+    <button id="clearAllBtn" class="clear-all-btn" onclick="clearAllFilters()">✕ Clear All Filters</button>
+
+    <!-- Job Type -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('typeFilter')">
+        Job Type <span id="typeFilterClear" style="display:none" onclick="clearGroup('type',event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="typeFilter">
+        <label class="filter-option"><input type="checkbox" value="full-time" name="type" onchange="applyFilters()" /><label>Full Time</label><span class="filter-count" id="cnt-full-time"></span></label>
+        <label class="filter-option"><input type="checkbox" value="part-time" name="type" onchange="applyFilters()" /><label>Part Time</label><span class="filter-count" id="cnt-part-time"></span></label>
+        <label class="filter-option"><input type="checkbox" value="contract" name="type" onchange="applyFilters()" /><label>Contract</label><span class="filter-count" id="cnt-contract"></span></label>
+        <label class="filter-option"><input type="checkbox" value="visiting" name="type" onchange="applyFilters()" /><label>Visiting / Guest</label><span class="filter-count" id="cnt-visiting"></span></label>
+      </div>
+    </div>
+
+    <!-- Institution Type -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('schoolTypeFilter')">
+        Institution Type <span id="schoolTypeFilterClear" style="display:none" onclick="clearGroup('schoolType',event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="schoolTypeFilter">
+        <label class="filter-option"><input type="checkbox" value="school" name="schoolType" onchange="applyFilters()" /><label>School (K-12)</label></label>
+        <label class="filter-option"><input type="checkbox" value="college" name="schoolType" onchange="applyFilters()" /><label>College / University</label></label>
+        <label class="filter-option"><input type="checkbox" value="coaching" name="schoolType" onchange="applyFilters()" /><label>Coaching Institute</label></label>
+      </div>
+    </div>
+
+    <!-- Board -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('boardFilter')">
+        Board / Affiliation <span id="boardFilterClear" style="display:none" onclick="clearGroup('board',event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="boardFilter">
+        <label class="filter-option"><input type="checkbox" value="CBSE" name="board" onchange="applyFilters()" /><label>CBSE</label></label>
+        <label class="filter-option"><input type="checkbox" value="ICSE" name="board" onchange="applyFilters()" /><label>ICSE</label></label>
+        <label class="filter-option"><input type="checkbox" value="State Board" name="board" onchange="applyFilters()" /><label>State Board</label></label>
+        <label class="filter-option"><input type="checkbox" value="University" name="board" onchange="applyFilters()" /><label>University</label></label>
+        <label class="filter-option"><input type="checkbox" value="IB" name="board" onchange="applyFilters()" /><label>IB / IGCSE</label></label>
+      </div>
+    </div>
+
+    <!-- Level -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('levelFilter')">
+        Teaching Level <span id="levelFilterClear" style="display:none" onclick="clearGroup('level',event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="levelFilter">
+        <label class="filter-option"><input type="checkbox" value="primary" name="level" onchange="applyFilters()" /><label>Primary (1-5)</label></label>
+        <label class="filter-option"><input type="checkbox" value="secondary" name="level" onchange="applyFilters()" /><label>Secondary (6-10)</label></label>
+        <label class="filter-option"><input type="checkbox" value="senior-secondary" name="level" onchange="applyFilters()" /><label>Senior Secondary (11-12)</label></label>
+        <label class="filter-option"><input type="checkbox" value="undergraduate" name="level" onchange="applyFilters()" /><label>Undergraduate</label></label>
+        <label class="filter-option"><input type="checkbox" value="postgraduate" name="level" onchange="applyFilters()" /><label>Postgraduate</label></label>
+      </div>
+    </div>
+
+    <!-- Salary Range -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('salaryFilter')">
+        Salary Range (₹/month) <span id="salaryFilterClear" style="display:none" onclick="clearSalary(event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="salaryFilter">
+        <div class="filter-salary">
+          <input type="number" id="salMin" placeholder="Min e.g. 15000" onchange="applyFilters()" />
+          <input type="number" id="salMax" placeholder="Max e.g. 60000" onchange="applyFilters()" />
+        </div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px">
+          <span class="quick-tag" style="background:var(--blue-light);color:var(--blue);border-color:transparent" onclick="setSalary(0,20000)">Under ₹20K</span>
+          <span class="quick-tag" style="background:var(--blue-light);color:var(--blue);border-color:transparent" onclick="setSalary(20000,40000)">₹20K–40K</span>
+          <span class="quick-tag" style="background:var(--blue-light);color:var(--blue);border-color:transparent" onclick="setSalary(40000,80000)">₹40K–80K</span>
+          <span class="quick-tag" style="background:var(--blue-light);color:var(--blue);border-color:transparent" onclick="setSalary(80000,999999)">₹80K+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('expFilter')">
+        Experience Required
+      </div>
+      <div class="filter-box-body" id="expFilter">
+        <label class="filter-option"><input type="radio" name="exp" value="" onchange="applyFilters()" checked /><label>Any</label></label>
+        <label class="filter-option"><input type="radio" name="exp" value="0" onchange="applyFilters()" /><label>Fresher (0 yrs)</label></label>
+        <label class="filter-option"><input type="radio" name="exp" value="2" onchange="applyFilters()" /><label>Up to 2 years</label></label>
+        <label class="filter-option"><input type="radio" name="exp" value="5" onchange="applyFilters()" /><label>Up to 5 years</label></label>
+        <label class="filter-option"><input type="radio" name="exp" value="10" onchange="applyFilters()" /><label>Up to 10 years</label></label>
+      </div>
+    </div>
+
+    <!-- Popular Subjects -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('subjectFilter')">
+        Subject <span id="subjectFilterClear" style="display:none" onclick="clearSubject(event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="subjectFilter">
+        <div id="subjectList"></div>
+      </div>
+    </div>
+
+    <!-- Top Cities -->
+    <div class="filter-box">
+      <div class="filter-box-header" onclick="toggleFilter('cityFilter')">
+        City <span id="cityFilterClear" style="display:none" onclick="clearCity(event)">Clear</span>
+      </div>
+      <div class="filter-box-body" id="cityFilter">
+        <div id="cityList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div class="results-panel">
+
+    <!-- Mobile filter button -->
+    <button class="mobile-filter-btn" onclick="document.getElementById('filterSidebar').classList.toggle('mobile-open')">
+      ⚙ Filters
+    </button>
+
+    <!-- Results bar -->
+    <div class="results-bar">
+      <div class="results-count" id="resultsCount">Loading jobs...</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <label style="font-size:0.85rem;color:var(--text-muted)">Sort by:</label>
+        <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+          <option value="newest">Newest First</option>
+          <option value="popular">Most Applied</option>
+          <option value="salary">Highest Salary</option>
+          <option value="oldest">Oldest First</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active filters chips -->
+    <div class="active-filters" id="activeFilters"></div>
+
+    <!-- Job list -->
+    <div id="jobList" class="job-list">
+      <!-- Skeleton loading -->
+      ${[1,2,3,4,5].map(() => `
+        <div class="skeleton-card">
+          <div class="skeleton" style="height:20px;width:60%;margin-bottom:8px"></div>
+          <div class="skeleton" style="height:14px;width:40%;margin-bottom:16px"></div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <div class="skeleton" style="height:24px;width:80px;border-radius:999px"></div>
+            <div class="skeleton" style="height:24px;width:80px;border-radius:999px"></div>
+            <div class="skeleton" style="height:24px;width:80px;border-radius:999px"></div>
+          </div>
+          <div class="skeleton" style="height:1px;margin-bottom:12px"></div>
+          <div style="display:flex;justify-content:space-between">
+            <div class="skeleton" style="height:16px;width:120px"></div>
+            <div class="skeleton" style="height:32px;width:100px;border-radius:8px"></div>
+          </div>
+        </div>`).join('')}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" id="pagination"></div>
+
+  </div>
+</div>
+
+<!-- JOB DETAIL MODAL -->
+<div class="job-modal-overlay" id="jobModal">
+  <div class="job-modal">
+    <div class="job-modal-header">
+      <span class="job-modal-close" onclick="closeJobModal()">✕</span>
+      <div class="job-modal-school" id="mSchoolName"></div>
+      <div class="job-modal-title" id="mTitle"></div>
+      <div class="job-modal-tags" id="mTags"></div>
+      <div class="job-modal-salary" id="mSalary"></div>
+    </div>
+    <div class="job-modal-body">
+      <div class="detail-grid" id="mDetailGrid"></div>
+      <div id="mDescription"></div>
+      <div id="mRequirements"></div>
+      <div class="school-info-box" id="mSchoolBox"></div>
+    </div>
+    <div class="job-modal-footer">
+      <button class="btn-outline" onclick="closeJobModal()">Close</button>
+      <button class="btn-outline" id="mSaveBtn" onclick="saveFromModal()">🔖 Save Job</button>
+      <button class="btn-primary" id="mApplyBtn" onclick="openApplyFromModal()">Apply Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="apply-modal-overlay" id="applyModal">
+  <div class="apply-modal">
+    <h3 id="applyTitle" style="margin-bottom:4px"></h3>
+    <p id="applySchool" style="color:var(--blue);font-size:0.9rem;margin-bottom:14px;font-weight:600"></p>
+
+    <!-- WHO IS APPLYING -->
+    <div id="applyingAsBox" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-bottom:16px;display:flex;align-items:center;gap:10px">
+      <div id="applyingAvatar" style="width:34px;height:34px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;flex-shrink:0"></div>
+      <div>
+        <div style="font-size:0.8rem;color:#15803d;font-weight:600">Applying as</div>
+        <div style="font-size:0.92rem;font-weight:700;color:#111" id="applyingName"></div>
+        <div style="font-size:0.78rem;color:#6b7280" id="applyingEmail"></div>
+      </div>
+      <a href="teacher-dashboard.html" style="margin-left:auto;font-size:0.78rem;color:var(--blue);font-weight:600">My Profile →</a>
+    </div>
+    <div id="notLoggedBox" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:0.88rem;color:#dc2626">
+      ⚠️ Login required. <a href="teacher-login.html?redirect=jobs" style="font-weight:700;color:#dc2626">Login here</a>
+    </div>
+
+    <div class="error-msg" id="applyErr"></div>
+    <div class="success-msg" id="applyOk"></div>
+
+    <!-- RESUME STATUS -->
+    <div id="resumeStatusBox" style="border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:0.88rem">
+      <span id="resumeStatusIcon">📄</span>
+      <span id="resumeStatusText" style="flex:1"></span>
+      <a id="resumeUploadLink" href="teacher-dashboard.html#profile" style="color:var(--blue);font-weight:600;font-size:0.8rem;white-space:nowrap"></a>
+    </div>
+
+    <div class="form-group">
+      <label>Cover Letter <span style="color:var(--text-muted);font-weight:400">(optional)</span></label>
+      <textarea id="coverLetter" rows="3" class="form-control" placeholder="Why are you a great fit for this role?" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:0.9rem;resize:vertical"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:16px">
+      <button class="btn-outline" style="flex:1" onclick="closeApplyModal()">Cancel</button>
+      <button class="btn-primary" style="flex:1" onclick="submitApplication()">Submit Application</button>
+    </div>
+    <p style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--text-muted)">
+      Not registered? <a href="teacher-register.html" style="color:var(--blue);font-weight:600">Create free profile</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  // ── State ────────────────────────────────────────────────────
+  let currentPage = 1;
+  let totalPages  = 1;
+  let currentJobId = null;
+  let currentJobTitle = '';
+  let currentJobSchool = '';
+  const token = localStorage.getItem('teacherToken');
+  const tData  = JSON.parse(localStorage.getItem('teacherData') || '{}');
+  const savedSet = new Set(JSON.parse(localStorage.getItem('savedJobIds') || '[]'));
+
+  // ── API helper ───────────────────────────────────────────────
+  function api(url, opts = {}) {
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) headers['Authorization'] = 'Bearer ' + token;
+    return fetch(url, { ...opts, headers: { ...headers, ...(opts.headers || {}) } });
+  }
+
+  // ── Build filter params ──────────────────────────────────────
+  function buildParams() {
+    const p = new URLSearchParams();
+    const q = document.getElementById('heroSearch').value.trim();
+    const city = document.getElementById('heroCity').value.trim();
+    if (q) p.set('q', q);
+    if (city) p.set('city', city);
+
+    // Checkboxes
+    ['type','schoolType','board','level'].forEach(name => {
+      const vals = [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value);
+      if (vals.length) p.set(name, vals[0]); // first selected
+    });
+
+    const salMin = document.getElementById('salMin').value;
+    const salMax = document.getElementById('salMax').value;
+    if (salMin) p.set('salaryMin', salMin);
+    if (salMax) p.set('salaryMax', salMax);
+
+    const exp = document.querySelector('input[name="exp"]:checked')?.value;
+    if (exp !== undefined && exp !== '') p.set('experience', exp);
+
+    const subjectChecked = [...document.querySelectorAll('input[name="subject"]:checked')].map(i => i.value);
+    if (subjectChecked.length) p.set('subject', subjectChecked[0]);
+
+    const cityChecked = [...document.querySelectorAll('input[name="citycheck"]:checked')].map(i => i.value);
+    if (cityChecked.length) p.set('city', cityChecked[0]);
+
+    p.set('sort', document.getElementById('sortSelect').value);
+    p.set('page', currentPage);
+    return p;
+  }
+
+  // ── Load Jobs ────────────────────────────────────────────────
+  async function loadJobs() {
+    const params = buildParams();
+    return new Promise(async (resolve) => {
+    const res = await fetch('/api/jobs?' + params);
+    const data = await res.json();
+
+    totalPages = data.pages || 1;
+    renderResults(data);
+    renderPagination(data.currentPage, data.pages);
+    renderActiveFilters(params);
+    populateSidebar(data);
+    updateClearBtn(params);
+    resolve();
+    }); // end Promise
+  }
+
+  // ── Render job cards ─────────────────────────────────────────
+  function renderResults(data) {
+    const list = document.getElementById('jobList');
+    const count = document.getElementById('resultsCount');
+    const total = data.total || 0;
+    count.innerHTML = `<strong>${total.toLocaleString()}</strong> teaching jobs found`;
+
+    if (!data.jobs || data.jobs.length === 0) {
+      list.innerHTML = `
+        <div class="no-results">
+          <div class="nr-icon">🔍</div>
+          <h3>No jobs found</h3>
+          <p>Try changing your filters or search terms</p>
+          <button class="btn-primary" style="margin-top:16px" onclick="clearAllFilters()">Clear Filters</button>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = data.jobs.map(j => {
+      const isSaved = savedSet.has(j._id);
+      const postedDays = Math.floor((Date.now() - new Date(j.createdAt)) / 86400000);
+      const postedText = postedDays === 0 ? 'Today' : postedDays === 1 ? 'Yesterday' : postedDays + ' days ago';
+      return `
+      <div class="jcard ${j.isFeatured ? 'featured' : ''}" onclick="openJobModal('${j._id}')">
+        ${j.isFeatured ? '<div class="jcard-featured-tag">⭐ Featured</div>' : ''}
+        <div class="jcard-top">
+          <div class="jcard-school-logo">${(j.schoolName||'?').substring(0,2).toUpperCase()}</div>
+          <div class="jcard-title-wrap">
+            <div class="jcard-title">${j.title}</div>
+            <div class="jcard-school">${j.schoolName}
+              ${j.schoolType === 'school' ? ' • School' : j.schoolType === 'college' ? ' • College' : ' • Coaching'}
+            </div>
+          </div>
+          <button class="jcard-save ${isSaved ? 'saved' : ''}" onclick="toggleSave(event,'${j._id}',this)" title="${isSaved ? 'Saved' : 'Save job'}">
+            ${isSaved ? '🔖' : '🔖'}
+          </button>
+        </div>
+        <div class="jcard-meta">
+          <span class="jcard-tag tag-blue">${j.subject}</span>
+          <span class="jcard-tag tag-orange">${j.type}</span>
+          ${j.city ? `<span class="jcard-tag tag-grey">📍 ${j.city}${j.state ? ', '+j.state : ''}</span>` : ''}
+          ${j.level && j.level !== 'all' ? `<span class="jcard-tag tag-grey">${j.level}</span>` : ''}
+          ${j.board ? `<span class="jcard-tag tag-green">${j.board}</span>` : ''}
+          ${j.experience > 0 ? `<span class="jcard-tag tag-grey">${j.experience}+ yrs exp</span>` : '<span class="jcard-tag tag-green">Freshers OK</span>'}
+        </div>
+        <div class="jcard-bottom">
+          <div>
+            ${j.salaryMin && j.salaryMin > 0
+              ? `<div class="jcard-salary">₹${j.salaryMin.toLocaleString()} – ₹${j.salaryMax.toLocaleString()}/month</div>`
+              : `<div class="jcard-salary-na">Salary not disclosed</div>`}
+          </div>
+          <div class="jcard-actions">
+            <span class="jcard-date">${postedText}</span>
+            ${j.applicants > 0 ? `<span class="jcard-apps"> • ${j.applicants} applied</span>` : ''}
+            <button class="btn-primary" style="padding:6px 18px;font-size:0.85rem" onclick="event.stopPropagation();openApplyModal('${j._id}','${escape(j.title)}','${escape(j.schoolName)}')">Apply</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Populate sidebar counts ──────────────────────────────────
+  function populateSidebar(data) {
+    // Subject list
+    const subList = document.getElementById('subjectList');
+    if (subList && data.subjectCounts) {
+      subList.innerHTML = data.subjectCounts.map(s => `
+        <label class="filter-option">
+          <input type="checkbox" value="${s._id}" name="subject" onchange="applyFilters()" />
+          <label>${s._id}</label>
+          <span class="filter-count">${s.count}</span>
+        </label>`).join('');
+    }
+    // City list
+    const cityList = document.getElementById('cityList');
+    if (cityList && data.cityCounts) {
+      cityList.innerHTML = data.cityCounts.map(c => `
+        <label class="filter-option">
+          <input type="checkbox" value="${c._id}" name="citycheck" onchange="applyFilters()" />
+          <label>${c._id}</label>
+          <span class="filter-count">${c.count}</span>
+        </label>`).join('');
+    }
+    // Type counts
+    if (data.typeCounts) {
+      data.typeCounts.forEach(t => {
+        const el = document.getElementById('cnt-' + t._id);
+        if (el) el.textContent = t.count;
+      });
+    }
+  }
+
+  // ── Pagination ───────────────────────────────────────────────
+  function renderPagination(current, total) {
+    const wrap = document.getElementById('pagination');
+    if (total <= 1) { wrap.innerHTML = ''; return; }
+    let html = `<button class="page-btn prev-next" ${current === 1 ? 'disabled' : ''} onclick="goPage(${current - 1})">← Prev</button>`;
+    const range = [];
+    if (total <= 7) { for (let i = 1; i <= total; i++) range.push(i); }
+    else {
+      range.push(1);
+      if (current > 3) range.push('...');
+      for (let i = Math.max(2, current-1); i <= Math.min(total-1, current+1); i++) range.push(i);
+      if (current < total - 2) range.push('...');
+      range.push(total);
+    }
+    range.forEach(p => {
+      if (p === '...') html += `<span class="page-btn" style="cursor:default;color:var(--text-muted)">…</span>`;
+      else html += `<button class="page-btn ${p === current ? 'active' : ''}" onclick="goPage(${p})">${p}</button>`;
+    });
+    html += `<button class="page-btn prev-next" ${current === total ? 'disabled' : ''} onclick="goPage(${current + 1})">Next →</button>`;
+    wrap.innerHTML = html;
+  }
+
+  function goPage(p) {
+    currentPage = p;
+    loadJobs();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Active filter chips ──────────────────────────────────────
+  function renderActiveFilters(params) {
+    const wrap = document.getElementById('activeFilters');
+    const chips = [];
+    if (params.get('q')) chips.push({ label: `"${params.get('q')}"`, remove: () => { document.getElementById('heroSearch').value = ''; applyFilters(); } });
+    if (params.get('city') && !params.get('citycheck')) chips.push({ label: `📍 ${params.get('city')}`, remove: () => { document.getElementById('heroCity').value = ''; applyFilters(); } });
+    if (params.get('type')) chips.push({ label: params.get('type'), remove: () => clearGroup('type') });
+    if (params.get('schoolType')) chips.push({ label: params.get('schoolType'), remove: () => clearGroup('schoolType') });
+    if (params.get('board')) chips.push({ label: params.get('board'), remove: () => clearGroup('board') });
+    if (params.get('level')) chips.push({ label: params.get('level'), remove: () => clearGroup('level') });
+    if (params.get('subject')) chips.push({ label: params.get('subject'), remove: () => clearSubject() });
+    if (params.get('salaryMin') || params.get('salaryMax')) chips.push({ label: `₹${params.get('salaryMin')||'0'}–${params.get('salaryMax')||'∞'}`, remove: () => clearSalary() });
+    if (params.get('experience')) chips.push({ label: `Max ${params.get('experience')} yrs exp`, remove: () => { document.querySelector('input[name="exp"][value=""]').checked = true; applyFilters(); } });
+    wrap.innerHTML = chips.map((c, i) => `<span class="active-filter">${c.label}<span class="remove" onclick="activeFilterRemove(${i})">✕</span></span>`).join('');
+    wrap._callbacks = chips.map(c => c.remove);
+  }
+  function activeFilterRemove(i) { document.querySelector('#activeFilters')._callbacks[i](); }
+
+  // ── Open job detail modal ────────────────────────────────────
+  async function openJobModal(id) {
+    document.getElementById('jobModal').classList.add('open');
+    document.getElementById('mTitle').textContent = 'Loading...';
+    document.getElementById('mTags').innerHTML = '';
+    document.getElementById('mDetailGrid').innerHTML = '';
+    document.getElementById('mDescription').innerHTML = '';
+    document.getElementById('mSchoolBox').innerHTML = '';
+    currentJobId = id;
+
+    const res = await fetch('/api/jobs/' + id);
+    const { job: j, school: s } = await res.json();
+    currentJobTitle  = j.title;
+    currentJobSchool = j.schoolName;
+
+    document.getElementById('mSchoolName').textContent = j.schoolName + (s?.isVerified ? ' ✓ Verified' : '');
+    document.getElementById('mTitle').textContent = j.title;
+    document.getElementById('mSalary').textContent = j.salaryMin > 0 ? `₹${j.salaryMin.toLocaleString()} – ₹${j.salaryMax.toLocaleString()}/month` : 'Salary not disclosed';
+
+    document.getElementById('mTags').innerHTML = [
+      `<span class="jcard-tag tag-blue">${j.subject}</span>`,
+      `<span class="jcard-tag tag-orange">${j.type}</span>`,
+      j.level && j.level !== 'all' ? `<span class="jcard-tag tag-grey">${j.level}</span>` : '',
+      j.board ? `<span class="jcard-tag tag-green">${j.board}</span>` : '',
+      `<span class="jcard-tag tag-grey">📍 ${j.city}${j.state ? ', ' + j.state : ''}</span>`,
+    ].join('');
+
+    document.getElementById('mDetailGrid').innerHTML = `
+      <div class="detail-item"><div class="detail-label">Job Type</div><div class="detail-val">${j.type}</div></div>
+      <div class="detail-item"><div class="detail-label">Teaching Level</div><div class="detail-val">${j.level || 'All Levels'}</div></div>
+      <div class="detail-item"><div class="detail-label">Experience Required</div><div class="detail-val">${j.experience > 0 ? j.experience + '+ years' : 'Fresher OK'}</div></div>
+      <div class="detail-item"><div class="detail-label">Location</div><div class="detail-val">${j.city}${j.state ? ', ' + j.state : ''}</div></div>
+      <div class="detail-item"><div class="detail-label">Board / Affiliation</div><div class="detail-val">${j.board || 'Not specified'}</div></div>
+      <div class="detail-item"><div class="detail-label">Applications</div><div class="detail-val">${j.applicants || 0} applied</div></div>
+      <div class="detail-item"><div class="detail-label">Deadline</div><div class="detail-val">${j.deadline ? new Date(j.deadline).toLocaleDateString('en-IN') : 'Not specified'}</div></div>
+      <div class="detail-item"><div class="detail-label">Posted</div><div class="detail-val">${new Date(j.createdAt).toLocaleDateString('en-IN')}</div></div>`;
+
+    if (j.description) document.getElementById('mDescription').innerHTML = `<div class="section-heading">Job Description</div><div class="description-text">${j.description}</div>`;
+    if (j.requirements) document.getElementById('mRequirements').innerHTML = `<div class="section-heading">Requirements</div><div class="description-text">${j.requirements}</div>`;
+
+    if (s) {
+      document.getElementById('mSchoolBox').innerHTML = `
+        <div class="school-info-logo">${s.name.substring(0,2).toUpperCase()}</div>
+        <div>
+          <div style="font-weight:700">${s.name} ${s.isVerified ? '<span style="color:#16a34a;font-size:0.8rem">✓ Verified</span>' : ''}</div>
+          <div style="font-size:0.85rem;color:var(--text-muted)">${s.type} • ${s.city}, ${s.state}</div>
+          ${s.board ? `<div style="font-size:0.85rem;color:var(--text-muted)">${s.board}</div>` : ''}
+        </div>`;
+    }
+
+    const isSaved = savedSet.has(id);
+    document.getElementById('mSaveBtn').textContent = isSaved ? '✅ Saved' : '🔖 Save Job';
+  }
+
+  function closeJobModal() { document.getElementById('jobModal').classList.remove('open'); }
+
+  // ── Apply Modal ──────────────────────────────────────────────
+  function openApplyModal(id, title, school) {
+    currentJobId = id;
+    document.getElementById('applyTitle').textContent = unescape(title);
+    document.getElementById('applySchool').textContent = unescape(school);
+    document.getElementById('applyErr').style.display = 'none';
+    document.getElementById('applyOk').style.display = 'none';
+    document.getElementById('coverLetter').value = '';
+
+    // Show who is applying
+    if (token && tData.name) {
+      const initials = tData.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      document.getElementById('applyingAvatar').textContent = initials;
+      document.getElementById('applyingName').textContent = tData.name;
+      document.getElementById('applyingEmail').textContent = tData.email || '';
+      document.getElementById('applyingAsBox').style.display = 'flex';
+      document.getElementById('notLoggedBox').style.display = 'none';
+
+      // Fetch resume status from profile
+      document.getElementById('resumeStatusBox').style.display = 'flex';
+      document.getElementById('resumeStatusText').textContent = 'Checking resume...';
+      document.getElementById('resumeUploadLink').textContent = '';
+      api('/api/teachers/me/profile').then(r => r.json()).then(p => {
+        if (p.resume) {
+          document.getElementById('resumeStatusIcon').textContent = '✅';
+          document.getElementById('resumeStatusBox').style.background = '#f0fdf4';
+          document.getElementById('resumeStatusBox').style.borderColor = '#bbf7d0';
+          document.getElementById('resumeStatusText').innerHTML = '<strong>Resume attached</strong> — school ko milega';
+          document.getElementById('resumeUploadLink').textContent = 'View';
+          document.getElementById('resumeUploadLink').href = p.resume;
+        } else {
+          document.getElementById('resumeStatusIcon').textContent = '⚠️';
+          document.getElementById('resumeStatusBox').style.background = '#fffbeb';
+          document.getElementById('resumeStatusBox').style.borderColor = '#fde68a';
+          document.getElementById('resumeStatusText').textContent = 'Resume upload nahi hai — schools prefer resume wale candidates';
+          document.getElementById('resumeUploadLink').textContent = 'Upload now →';
+          document.getElementById('resumeUploadLink').href = 'teacher-dashboard.html';
+        }
+      }).catch(() => {
+        document.getElementById('resumeStatusBox').style.display = 'none';
+      });
+    } else {
+      document.getElementById('applyingAsBox').style.display = 'none';
+      document.getElementById('notLoggedBox').style.display = 'block';
+      document.getElementById('resumeStatusBox').style.display = 'none';
+    }
+
+    document.getElementById('applyModal').classList.add('open');
+  }
+  function openApplyFromModal() {
+    closeJobModal();
+    openApplyModal(currentJobId, currentJobTitle, currentJobSchool);
+  }
+  function closeApplyModal() { document.getElementById('applyModal').classList.remove('open'); }
+
+  async function submitApplication() {
+    if (!token) {
+      // Save job ID so we can return after login
+      localStorage.setItem('pendingApplyJobId', currentJobId);
+      localStorage.setItem('pendingApplyTitle', currentJobTitle);
+      localStorage.setItem('pendingApplySchool', currentJobSchool);
+      window.location.href = 'teacher-login.html?redirect=jobs';
+      return;
+    }
+    const err = document.getElementById('applyErr');
+    const ok  = document.getElementById('applyOk');
+    err.style.display = 'none';
+    const res = await api('/api/applications', {
+      method: 'POST',
+      body: JSON.stringify({ jobId: currentJobId, coverLetter: document.getElementById('coverLetter').value })
+    });
+    const data = await res.json();
+    if (!res.ok) { err.textContent = data.error; err.style.display = 'block'; return; }
+    ok.textContent = '✓ Application submitted successfully!';
+    ok.style.display = 'block';
+    setTimeout(closeApplyModal, 2000);
+  }
+
+  // ── Save / Unsave ────────────────────────────────────────────
+  async function toggleSave(e, id, btn) {
+    e.stopPropagation();
+    if (!token) { window.location.href = 'teacher-login.html'; return; }
+    if (savedSet.has(id)) {
+      await api('/api/saved/' + id, { method: 'DELETE' });
+      savedSet.delete(id);
+      btn.classList.remove('saved');
+    } else {
+      await api('/api/saved/' + id, { method: 'POST' });
+      savedSet.add(id);
+      btn.classList.add('saved');
+    }
+    localStorage.setItem('savedJobIds', JSON.stringify([...savedSet]));
+  }
+
+  function saveFromModal() {
+    if (!token) { window.location.href = 'teacher-login.html'; return; }
+    const btn = document.getElementById('mSaveBtn');
+    if (savedSet.has(currentJobId)) {
+      api('/api/saved/' + currentJobId, { method: 'DELETE' });
+      savedSet.delete(currentJobId);
+      btn.textContent = '🔖 Save Job';
+    } else {
+      api('/api/saved/' + currentJobId, { method: 'POST' });
+      savedSet.add(currentJobId);
+      btn.textContent = '✅ Saved';
+    }
+    localStorage.setItem('savedJobIds', JSON.stringify([...savedSet]));
+  }
+
+  // ── Filter helpers ───────────────────────────────────────────
+  function applyFilters() { currentPage = 1; loadJobs(); }
+  function applySearch()   { currentPage = 1; loadJobs(); }
+
+  function quickSearch(subject) {
+    document.getElementById('heroSearch').value = subject;
+    applySearch();
+  }
+
+  function toggleFilter(id) {
+    const el = document.getElementById(id);
+    el.style.display = el.style.display === 'none' ? '' : 'none';
+  }
+
+  function clearGroup(name, e) {
+    if (e) e.stopPropagation();
+    document.querySelectorAll(`input[name="${name}"]`).forEach(i => i.checked = false);
+    applyFilters();
+  }
+  function clearSubject(e) {
+    if (e) e.stopPropagation();
+    document.querySelectorAll('input[name="subject"]').forEach(i => i.checked = false);
+    applyFilters();
+  }
+  function clearCity(e) {
+    if (e) e.stopPropagation();
+    document.querySelectorAll('input[name="citycheck"]').forEach(i => i.checked = false);
+    applyFilters();
+  }
+  function clearSalary(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('salMin').value = '';
+    document.getElementById('salMax').value = '';
+    applyFilters();
+  }
+  function setSalary(min, max) {
+    document.getElementById('salMin').value = min || '';
+    document.getElementById('salMax').value = max >= 999999 ? '' : max;
+    applyFilters();
+  }
+
+  function clearAllFilters() {
+    document.getElementById('heroSearch').value = '';
+    document.getElementById('heroCity').value = '';
+    document.querySelectorAll('.filter-sidebar input[type=checkbox]').forEach(i => i.checked = false);
+    document.querySelector('input[name="exp"][value=""]').checked = true;
+    clearSalary();
+    document.getElementById('sortSelect').value = 'newest';
+    applyFilters();
+  }
+
+  function updateClearBtn(params) {
+    const hasFilters = params.get('q') || params.get('type') || params.get('schoolType') ||
+      params.get('board') || params.get('level') || params.get('subject') ||
+      params.get('salaryMin') || params.get('salaryMax') || params.get('experience');
+    document.getElementById('clearAllBtn').style.display = hasFilters ? 'block' : 'none';
+  }
+
+  // Close modals on overlay click
+  document.getElementById('jobModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeJobModal(); });
+  document.getElementById('applyModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeApplyModal(); });
+
+  // Enter key on search
+  document.getElementById('heroSearch').addEventListener('keydown', e => { if (e.key === 'Enter') applySearch(); });
+  document.getElementById('heroCity').addEventListener('keydown', e => { if (e.key === 'Enter') applySearch(); });
+
+  // ── Init ─────────────────────────────────────────────────────
+  loadJobs().then(() => {
+    // Auto-open apply modal after login redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const applyJobId = urlParams.get('applyJobId') || localStorage.getItem('pendingApplyJobId');
+    const applyTitle = localStorage.getItem('pendingApplyTitle');
+    const applySchool = localStorage.getItem('pendingApplySchool');
+    if (applyJobId && token) {
+      localStorage.removeItem('pendingApplyJobId');
+      localStorage.removeItem('pendingApplyTitle');
+      localStorage.removeItem('pendingApplySchool');
+      setTimeout(() => openApplyModal(applyJobId, applyTitle || 'Job', applySchool || ''), 500);
+    }
+
+    // Handle ?q= from landing page search
+    const q = urlParams.get('q');
+    if (q) { document.getElementById('heroSearch').value = q; applySearch(); }
+  });
+
+  // Mobile hamburger nav
+  const hamburger = document.getElementById('navHamburger');
+  const drawer    = document.getElementById('mobileNavDrawer');
+  const overlay   = document.getElementById('mobileNavOverlay');
+  const closeBtn  = document.getElementById('mobileNavClose');
+  function openNav()  { drawer.classList.add('open'); overlay.classList.add('open'); hamburger.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeNav() { drawer.classList.remove('open'); overlay.classList.remove('open'); hamburger.classList.remove('open'); document.body.style.overflow=''; }
+  hamburger.addEventListener('click', openNav);
+  overlay.addEventListener('click', closeNav);
+  closeBtn.addEventListener('click', closeNav);
+
+  // Mobile filter sidebar close on overlay click
+  document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('filterSidebar');
+    if (sidebar && sidebar.classList.contains('mobile-open') && !sidebar.contains(e.target) && !e.target.closest('.mobile-filter-btn')) {
+      sidebar.classList.remove('mobile-open');
+    }
+  });
+</script>
+</body>
+</html>
