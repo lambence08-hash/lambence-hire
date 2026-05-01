@@ -1,27 +1,29 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 async function sendMail({ to, subject, html }) {
-  if (!process.env.SMTP_PASS || process.env.SMTP_PASS === 'your_gmail_app_password_here') {
-    console.log(`[EMAIL SKIPPED] To: ${to} | Subject: ${subject}`);
+  if (!process.env.RESEND_API_KEY) {
+    console.log(`[EMAIL SKIPPED] No RESEND_API_KEY | To: ${to}`);
     return;
   }
   try {
-    await transporter.sendMail({ from: process.env.SMTP_FROM, to, subject, html });
+    const resend = getResend();
+    const { error } = await resend.emails.send({
+      from: 'Lambence Hire <onboarding@resend.dev>',
+      to,
+      subject,
+      html
+    });
+    if (error) throw new Error(JSON.stringify(error));
     console.log(`[EMAIL SENT] To: ${to}`);
   } catch (e) {
     console.error('[EMAIL ERROR]', e.message);
   }
 }
 
-// Templates
 function applicationReceivedSchool({ schoolName, teacherName, jobTitle, subject, experience, badge, appId }) {
   return {
     subject: `New Application — ${jobTitle} | Lambence Hire`,
@@ -51,7 +53,7 @@ function applicationStatusTeacher({ teacherName, jobTitle, schoolName, status })
   const color = colors[status] || '#374151';
   const messages = {
     shortlisted: 'Congratulations! You have been shortlisted.',
-    hired: '🎉 You have been hired! Please contact the school.',
+    hired: 'You have been hired! Please contact the school.',
     rejected: 'Thank you for applying. The school has moved forward with other candidates.',
     reviewed: 'Your application has been reviewed by the school.'
   };
@@ -94,7 +96,7 @@ function newJobAlertTeacher({ teacherName, jobs }) {
           <p style="color:#16a34a;font-weight:bold;margin:0">${j.salaryMin ? '₹' + j.salaryMin.toLocaleString() + ' – ₹' + j.salaryMax.toLocaleString() + '/mo' : 'Salary not disclosed'}</p>
         </div>`).join('')}
         <a href="${process.env.CLIENT_URL}/jobs.html" style="background:#1a56db;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block">Browse All Jobs →</a>
-        <p style="color:#9ca3af;font-size:12px;margin-top:24px">Lambence Hire | <a href="${process.env.CLIENT_URL}/unsubscribe" style="color:#9ca3af">Unsubscribe</a></p>
+        <p style="color:#9ca3af;font-size:12px;margin-top:24px">Lambence Hire</p>
       </div>
     </div>`
   };
